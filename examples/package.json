@@ -1,0 +1,23 @@
+{
+  "name": "sprudel",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^8.18.10",
+    "@react-three/fiber": "^7.0.26",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.2.2",
+    "sprudel": "file:../"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.0.7",
+    "sass": "^1.49.9",
+    "vite": "^2.8.0"
+  }
+}
