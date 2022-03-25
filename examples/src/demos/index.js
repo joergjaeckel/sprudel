@@ -5,6 +5,8 @@ const Burst = { Component: lazy(() => import('./Burst')) }
 const Color = { Component: lazy(() => import('./Color')) }
 const Emit = { Component: lazy(() => import('./Emit')) }
 const EmitBurst = { Component: lazy(() => import('./EmitBurst')) }
+const RibbonBurst = { Component: lazy(() => import('./RibbonBurst')) }
+const RibbonTest = { Component: lazy(() => import('./RibbonTest')) }
 
 export {
     Simple,
@@ -12,4 +14,6 @@ export {
     Color,
     Emit,
     EmitBurst,
+    RibbonBurst,
+    RibbonTest,
 }

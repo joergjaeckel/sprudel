@@ -1,6 +1,5 @@
 import {World} from 'miniplex'
-import {bezier} from "@leva-ui/plugin-bezier";
-import {ColorKeyframeTrack, Interpolant, KeyframeTrack, Vector3} from "three";
+import {ColorKeyframeTrack, Interpolant, Vector3} from "three";
 
 export const world = new World()
 
@@ -12,6 +11,7 @@ export const emittingEntities = world.archetype("emitting");
 export const ribbonEntities = world.archetype("ribbon");
 
 export * from './ParticleRenderer'
+export * from './RibbonRenderer'
 
 export * from './systems'
 
@@ -33,6 +33,7 @@ export const defaultBurst = {
 }
 
 export type Particle = {
+    particle?: boolean
     //duration: 2,
     //looping: false,
     //prewarm: false,
@@ -136,6 +137,10 @@ export const validateParticle = (entity: Particle): Particle => {
 
     if (entity.startColor) e.color = entity.startColor
     if (entity.startLifetime) e.remainingLifetime = entity.startLifetime
+
+    if (entity.particle === false) { // @ts-ignore
+        delete e.particle
+    }
 
     /* Is done in the emitting system too otherwise the aprticles will share its evaluation */
     //@ts-ignore

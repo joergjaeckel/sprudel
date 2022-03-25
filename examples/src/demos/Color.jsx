@@ -21,11 +21,12 @@ const Emitter = () => {
                 {
                     rateOverTime: 3,
                     startLifetime: 2,
-                    startSpeed: 0.1,
+                    startSpeed: 0.2,
                     startSize: 6,
                     sprite: 11,
                     startRotation: [0, 1, 0],
                     randomizeDirection: .1,
+                    mass: -2,
                     colorOverLifetime: new ColorKeyframeTrack('Particle Color', [0, .25, .8], [1, 1, 1, 1, 1, 0, 1, 0, 0]),
                     opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .2, 0.8, 1], [0, 1, .8, 0]),
                     bursts: [

@@ -27,6 +27,7 @@ export const ParticleRenderer = ({ wireframe, alphaMap, maxCount = 10000 }: Part
         if (!ref.current) return
 
         for (let i = 0; i < particleEntities.entities.length; i++) {
+
             const {
                 position = {x: 0, y: 0, z: 0},
                 opacity = 1,
@@ -34,7 +35,7 @@ export const ParticleRenderer = ({ wireframe, alphaMap, maxCount = 10000 }: Part
                 color = [1, 1, 1],
                 sprite = 0,
             } = particleEntities.entities[i];
-            //console.log(color);
+
             ref.current.attributes.position.setXYZ(i, position.x, position.y, position.z)
             ref.current.attributes.color.setXYZ(i, color[0], color[1], color[2])
             ref.current.attributes.opacity.setX(i, opacity)

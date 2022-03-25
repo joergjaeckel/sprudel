@@ -21,9 +21,9 @@ const Emitter = ({position}) => {
                 {
                     rateOverTime: 10,
                     startLifetime: 2,
-                    startSpeed: 0.1,
+                    startSpeed: 0.3,
                     startSize: 3,
-                    startRotation: [0, 1, 0],
+                    startRotation: [1, 1, 0],
                 },
             ]
         }));

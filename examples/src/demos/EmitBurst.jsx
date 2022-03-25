@@ -22,7 +22,7 @@ const Emitter = () => {
                 {
                     rateOverTime: 0,
                     startLifetime: .5,
-                    startSpeed: 0.4,
+                    startSpeed: .4,
                     startSize: 5,
                     randomizeDirection: 2,
                     randomizeLifetime: .2,

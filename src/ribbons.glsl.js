@@ -20,6 +20,7 @@ export const vertex = /* glsl */ `
   //varying vec2 vUV;
   //varying vec4 vColor;
   varying float vCounters;
+  varying float vWidth;
 
   vec2 fix(vec4 i, float aspect) {
     vec2 res = i.xy / i.w;
@@ -46,8 +47,6 @@ export const vertex = /* glsl */ `
     vec2 prevP = fix(prevPos, aspect);
     vec2 nextP = fix(nextPos, aspect);
 
-    float w = lineWidth * width;
-
     vec2 dir;
 
     if (nextP == currentP) dir = normalize(currentP - prevP);
@@ -59,12 +58,12 @@ export const vertex = /* glsl */ `
 
       vec2 perp = vec2(-dir1.y, dir1.x);
       vec2 miter = vec2(-dir.y, dir.x);
-      //w = clamp( w / dot( miter, perp ), 0., 4. * lineWidth * width );
+      //w = clamp( w / dot( miter, perp ), 0., 4. * width );
     }
 
     //vec2 normal = ( cross( vec3( dir, 0. ), vec3( 0., 0., 1. ) ) ).xy;
     vec4 normal = vec4(-dir.y, dir.x, 0., 1.);
-    normal.xy *= .5 * w;
+    normal.xy *= .5 * width;
     normal *= projectionMatrix;
 
     if (sizeAttenuation == 0.) {

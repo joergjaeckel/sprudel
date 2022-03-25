@@ -1,9 +1,32 @@
 import { useFrame } from "@react-three/fiber";
-import {Vector2, ShaderChunk, UniformsLib, Vector3, BufferAttribute, BufferGeometry} from "three";
-import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils";
+import {
+    Vector2,
+    ShaderChunk,
+    UniformsLib,
+    Vector3,
+    BufferAttribute,
+    BufferGeometry,
+    Texture,
+    Color,
+    ShaderLib, AdditiveBlending
+} from "three";
+import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
 import { useEffect, useMemo, useRef } from "react";
-import { ribbonEntities } from "../../src";
-import { vertex } from "../../src/ribbons.glsl";
+import { ribbonEntities } from "./index";
+import { vertex } from "./ribbons.glsl";
+
+var pattern = /#include <(.*)>/gm;
+
+function parseIncludes(string: string) {
+    function replace(match: string, include: string) {
+        var replace = ShaderChunk[include];
+        return parseIncludes(replace);
+    }
+    return string.replace(pattern, replace);
+}
+
+//console.log(parseIncludes(vertex));
+//console.log(parseIncludes(ShaderLib.basic.fragmentShader));
 
 const testPoints = {
     entities: [
@@ -21,7 +44,7 @@ const testPoints = {
     ]
 };
 
-export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: number}) => {
+export const RibbonRenderer = ({ alphaMap, wireframe, maxCount = 10000 }: {alphaMap: Texture, wireframe: boolean, maxCount: number}) => {
     const ref = useRef<BufferGeometry>();
 
     const positions = useMemo(() => new Float32Array(maxCount * 3), []);
@@ -33,10 +56,10 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
     const indices = useMemo(() => new Uint16Array(maxCount * 1), []);
     const counters = useMemo(() => new Float32Array(maxCount * 1), []);
 
-    const _positions = useRef([]);
-    const _counters = useRef([]);
+    const _positions = useRef<number[]>([]);
+    const _counters = useRef<number[]>([]);
 
-    const compareV3 = (a, b) => {
+    const compareV3 = (a: number, b: number) => {
         const aa = a * 6;
         const ab = b * 6;
         return (
@@ -46,23 +69,23 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
         );
     };
 
-    const copyV3 = (a) => {
+    const copyV3 = (a: number) => {
         const aa = a * 6;
         return [_positions.current[aa], _positions.current[aa + 1], _positions.current[aa + 2]];
     };
 
     useFrame(() => {
         if(!ref.current) return
-        _positions.current = [];
-        _counters.current = [];
-        const _previous = [];
-        const _next = [];
-        const _side = [];
-        const _width = [];
-        const _indices_array = [];
-        const _uvs = [];
-        let BPI = 0;
-        let BII = 0;
+        _positions.current = []
+        _counters.current = []
+        const _previous = [] as number[]
+        const _next = [] as number[]
+        const _side = []
+        const _width = []
+        const _indices_array = []
+        const _uvs = []
+        let BPI = 0
+        let BII = 0
 
         let _sorted = [];
 
@@ -110,9 +133,8 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
                 // widths
                 //if (this._widthCallback) w = this._widthCallback(j / (l - 1))
                 //else w = 1
-                w = 10;
-                _width.push(w);
-                _width.push(w);
+                _width.push(iPoints[j].linewidth);
+                _width.push(iPoints[j].linewidth);
 
                 // uvs
                 _uvs.push(j / (l - 1), 0);
@@ -153,21 +175,21 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
             BII += (iPoints.length - 1) * 2 * 3;
         }
 
-        ref.current.attributes.position.copyArray(_positions.current);
+        (ref.current.attributes.position as BufferAttribute).copyArray(_positions.current)
         ref.current.attributes.position.needsUpdate = true;
-        ref.current.attributes.counters.copyArray(_counters.current);
+        (ref.current.attributes.counters as BufferAttribute).copyArray(_counters.current);
         ref.current.attributes.counters.needsUpdate = true;
-        ref.current.attributes.previous.copyArray(_previous);
+        (ref.current.attributes.previous as BufferAttribute).copyArray(_previous);
         ref.current.attributes.previous.needsUpdate = true;
-        ref.current.attributes.next.copyArray(_next);
+        (ref.current.attributes.next as BufferAttribute).copyArray(_next);
         ref.current.attributes.next.needsUpdate = true;
-        ref.current.attributes.side.copyArray(_side);
+        (ref.current.attributes.side as BufferAttribute).copyArray(_side);
         ref.current.attributes.side.needsUpdate = true;
-        ref.current.attributes.width.copyArray(_width);
+        (ref.current.attributes.width as BufferAttribute).copyArray(_width);
         ref.current.attributes.width.needsUpdate = true;
-        ref.current.attributes.index.copyArray([0, 2, 1, 0, 3, 2]);
+        (ref.current.attributes.index as BufferAttribute).copyArray([0, 2, 1, 0, 3, 2]);
         ref.current.attributes.index.needsUpdate = true;
-        ref.current.attributes.uv.copyArray(_uvs);
+        (ref.current.attributes.uv as BufferAttribute).copyArray(_uvs);
         ref.current.attributes.uv.needsUpdate = true;
 
         ref.current.setDrawRange(0, BPI * 3 * 2);
@@ -176,7 +198,7 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
 
         ref.current.computeBoundingSphere();
         ref.current.computeBoundingBox();
-    }, []);
+    });
 
     return (
         <mesh>
@@ -192,7 +214,11 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
             </bufferGeometry>
             <shaderMaterial
                 vertexShader={vertex}
-                fragmentShader={ShaderChunk.meshbasic_frag}
+                fragmentShader={ShaderLib.basic.fragmentShader}
+                defines={{
+                    'USE_ALPHAMAP': 1,
+                    'USE_UV': 1,
+            }}
                 uniforms={mergeUniforms([
                     UniformsLib.common,
                     UniformsLib.specularmap,
@@ -201,7 +227,6 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
                     UniformsLib.lightmap,
                     UniformsLib.fog,
                     {
-                        lineWidth: { value: 0.01 },
                         resolution: { value: new Vector2(1, 1) },
                         sizeAttenuation: { value: 1 },
                         dashArray: { value: 0 },
@@ -209,13 +234,14 @@ export default ({ wireframe, maxCount = 10000 }: {wireframe: boolean, maxCount: 
                         dashRatio: { value: 0.5 },
                         useDash: { value: 0 },
                         visibility: { value: 1 },
-                        alphaTest: { value: 0 }
+                        alphaTest: { value: 0 },
+                        //diffuse: { value: new Color(1,0,0) },
+                        alphaMap: { value: alphaMap }
                     }
                 ])}
-                lineWidth={0.1}
                 wireframe={wireframe}
-                //side={DoubleSide}
-                //color={0xffffff}
+                transparent={true}
+                depthWrite={false}
             />
         </mesh>
     );
