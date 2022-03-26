@@ -73,11 +73,18 @@ void main() {
     
     // Finally to UV texture coordinates
     // 1.0 - 0,125 - 1 * 0,125 + 0,125 * y
+    
     vec2 uv = vec2(dx * gl_PointCoord.x + col * dx, 1.0 - row * dy - dy * gl_PointCoord.y); // flipY:  1.0 - dy - row * dy + dy * gl_PointCoord.y
-    //diffuseColor = texture2D(alphaMap, uv);
-    diffuseColor.a *= texture2D( alphaMap, uv ).g;
+    
+    #if defined( USE_MAP )
+        diffuseColor = texture2D( map, uv );
+    #endif
+    
+    #if defined( USE_ALPHAMAP )
+        diffuseColor.a *= texture2D( alphaMap, uv ).g;
+    #endif
 	
-	//#include <map_particle_fragment>
+	//include <map_particle_fragment>
 	#include <color_fragment>
 	#include <alphatest_fragment>
 	outgoingLight = diffuseColor.rgb;

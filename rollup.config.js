@@ -1,8 +1,9 @@
 import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
+import image from '@rollup/plugin-image'
 
 const external = ['react', 'react/jsx-runtime', '@react-three/fiber', 'three']
-const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json']
+const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json', '.png']
 
 const getBabelOptions = ({ useESModules }, targets) => ({
   babelHelpers: 'runtime',
@@ -23,6 +24,7 @@ export default [
     input: `./src/index.tsx`,
     output: { dir: 'dist', format: 'esm' },
     plugins: [
+      image(),
       resolve({ extensions }),
       babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')),
     ],

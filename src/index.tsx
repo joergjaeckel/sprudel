@@ -10,7 +10,8 @@ export const particleEntities = world.archetype("particle");
 export const emittingEntities = world.archetype("emitting");
 export const ribbonEntities = world.archetype("ribbon");
 
-export * from './ParticleRenderer'
+//export * from './ParticleRenderer'
+export * from './ThreeParticleRenderer'
 export * from './RibbonRenderer'
 
 export * from './systems'
@@ -111,7 +112,7 @@ export const defaultParticle = {
     //opacityOverLifetime: (t) => (1 - t / 3) * 0.4,
     //sizeFunction: (t) => smoke.initialSize + 10 * smoke.sizeFunction.evaluate(t)
 
-    sprite: 1,
+    sprite: 0,
 
     inheritVelocity: false,
 
