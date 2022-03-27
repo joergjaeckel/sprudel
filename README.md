@@ -1,3 +1,5 @@
+![Imgur](https://imgur.com/rqS9FVr.png)
+
 # sprudel
 
 This is meant to be a nice and flexible Particle System for three.js. In its core it utilizes ```miniplex``` as ECS. 
