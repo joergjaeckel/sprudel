@@ -45,12 +45,6 @@ export class ParticleGeometry extends BufferGeometry {
 
     }
 
-    setMaxCount = () => {
-
-        console.log('ghello')
-
-    }
-
     update() {
 
         for (let i = 0; i < particleEntities.entities.length; i++) {

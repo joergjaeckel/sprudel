@@ -1,4 +1,4 @@
-import {Color, Matrix3, ShaderChunk, ShaderMaterial, Texture, TextureLoader} from "three";
+import {Color, Matrix3, ShaderChunk, ShaderMaterial, Texture} from "three";
 // @ts-ignore
 import getImageData from "./assets/images/circle_05.png";
 import {fragment, vertex} from "./points.glsl";
@@ -23,20 +23,11 @@ type ParticleMaterialProps = {
 
 export class ParticleMaterial extends ShaderMaterial {
 
-    color: Color
-    alphaMap?: Texture
-    //sizeAttentuation: boolean
-
     constructor(parameters: ParticleMaterialProps) {
 
         super()
 
         this.type = 'ParticleMaterial'
-
-        this.color = new Color( 0x0000ff );
-
-        const loader = new TextureLoader();
-        const texture = loader.load( getImageData );
 
         this.vertexShader = vertex
         this.fragmentShader = fragment
@@ -45,7 +36,7 @@ export class ParticleMaterial extends ShaderMaterial {
             opacity: {value: 1.0},
             scale: {value: 500.0},
             map: {value: null},
-            alphaMap: {value: texture},
+            alphaMap: {value: null},
             alphaTest: {value: 0},
             uvTransform: {value: new Matrix3()},
             fogDensity: {value: 0.00025},
@@ -55,9 +46,11 @@ export class ParticleMaterial extends ShaderMaterial {
             spriteSheetSize: {value: {x: 1024, y: 1024}},
             spriteSize: {value: {x: 1024, y: 1024}}
         }
+
         this.defines = {
             'USE_SIZEATTENUATION': 1,
         }
+
         this.vertexColors = true
         this.transparent = true
         this.depthWrite = false
