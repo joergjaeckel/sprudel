@@ -1,21 +1,35 @@
-import {Canvas, useFrame, useLoader} from "@react-three/fiber";
-import {useEffect} from "react";
+import {Canvas, extend, useFrame, useLoader} from "@react-three/fiber";
+import {useEffect, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
-import {validateParticle, emittingSystem, livingSystem, movingSystem, ParticleRenderer, world, RibbonRenderer} from "sprudel";
+import {
+    validateParticle,
+    emittingSystem,
+    livingSystem,
+    movingSystem,
+    world,
+    RibbonRenderer,
+    ParticleGeometry, ParticleMaterial
+} from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import trailSheet from './assets/images/trailsheet.png'
 import {TextureLoader, Vector3} from "three";
 
-const Emitter = () => {
+extend({ParticleGeometry, ParticleMaterial})
+
+const Particles = () => {
+
+    const ref = useRef()
+
+    const alphaMap = useLoader(TextureLoader, spriteSheet)
 
     useFrame((state, delta) => {
         emittingSystem(delta);
         movingSystem(delta);
         livingSystem(delta);
+        ref.current.update()
     });
 
     useEffect(() => {
-
         const start = world.createEntity(validateParticle({
             sprite: 0,
             startSize: 3,
@@ -33,7 +47,7 @@ const Emitter = () => {
             ribbon: true,
             parent: 99,
             linewidth: 1,
-            color: [0,0,0],
+            color: [0,0,1],
         }));
 
         return () => {
@@ -43,18 +57,23 @@ const Emitter = () => {
 
     }, []);
 
-    return null;
+    return (
+        <points>
+            <particleGeometry maxCount={10000} ref={ref}/>
+            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}}/>
+        </points>
+    )
+
 }
 
 const Bursts = () => {
 
-    const [alphaMap, trailMap] = useLoader(TextureLoader, [spriteSheet, trailSheet])
+    const [trailMap] = useLoader(TextureLoader, [trailSheet])
 
     return (
         <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
             <OrbitControls/>
-            <Emitter/>
-            <ParticleRenderer alphaMap={alphaMap} />
+            <Particles />
             <RibbonRenderer alphaMap={trailMap} />
         </Canvas>
     );

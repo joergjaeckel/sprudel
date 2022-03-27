@@ -1,16 +1,30 @@
-import {Canvas, useFrame, useLoader} from "@react-three/fiber";
-import {useEffect} from "react";
+import {Canvas, extend, useFrame, useLoader} from "@react-three/fiber";
+import {useEffect, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
-import {emittingSystem, livingSystem, movingSystem, ParticleRenderer, world, validateParticle} from "sprudel";
+import {
+    emittingSystem,
+    livingSystem,
+    movingSystem,
+    world,
+    validateParticle,
+    ParticleGeometry, ParticleMaterial
+} from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
-import {ColorKeyframeTrack, NumberKeyframeTrack, TextureLoader, Vector3} from "three";
+import {ColorKeyframeTrack, NumberKeyframeTrack, TextureLoader} from "three";
 
-const Emitter = () => {
+extend({ParticleGeometry, ParticleMaterial})
+
+const Particles = () => {
+
+    const ref = useRef()
+
+    const alphaMap = useLoader(TextureLoader, spriteSheet)
 
     useFrame((state, delta) => {
         emittingSystem(delta);
         movingSystem(delta);
         livingSystem(delta);
+        ref.current.update()
     });
 
     useEffect(() => {
@@ -45,20 +59,24 @@ const Emitter = () => {
 
     }, []);
 
-    return null;
+    return (
+        <points>
+            <particleGeometry maxCount={10000} ref={ref}/>
+            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}}/>
+        </points>
+    )
+
 }
 
 const Simple = () => {
 
-    const alphaMap = useLoader(TextureLoader, spriteSheet)
-    alphaMap.flipY = false
     return (
         <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
-            <OrbitControls/>
-            <Emitter position={[0, 0.5, 0]}/>
-            <ParticleRenderer alphaMap={alphaMap}/>
+            <OrbitControls />
+            <Particles />
         </Canvas>
     );
+
 }
 
 export default Simple

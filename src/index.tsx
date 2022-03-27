@@ -10,8 +10,9 @@ export const particleEntities = world.archetype("particle");
 export const emittingEntities = world.archetype("emitting");
 export const ribbonEntities = world.archetype("ribbon");
 
-//export * from './ParticleRenderer'
-export * from './ThreeParticleRenderer'
+export * from './ParticleGeometry'
+export * from './ParticleMaterial'
+
 export * from './RibbonRenderer'
 
 export * from './systems'

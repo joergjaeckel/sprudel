@@ -1,16 +1,30 @@
-import {Canvas, useFrame, useLoader} from "@react-three/fiber";
-import {useEffect} from "react";
+import {Canvas, extend, useFrame, useLoader} from "@react-three/fiber";
+import {useEffect, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
-import {validateParticle, emittingSystem, livingSystem, movingSystem, ParticleRenderer, world} from "sprudel";
+import {
+    validateParticle,
+    emittingSystem,
+    livingSystem,
+    movingSystem,
+    world,
+    ParticleGeometry, ParticleMaterial
+} from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import {TextureLoader} from "three";
 
-const Emitter = () => {
+extend({ParticleGeometry, ParticleMaterial})
+
+const Particles = () => {
+
+    const ref = useRef()
+
+    const alphaMap = useLoader(TextureLoader, spriteSheet)
 
     useFrame((state, delta) => {
         emittingSystem(delta);
         movingSystem(delta);
         livingSystem(delta);
+        ref.current.update()
     });
 
     useEffect(() => {
@@ -27,6 +41,7 @@ const Emitter = () => {
                     randomizeDirection: 2,
                     randomizeLifetime: .2,
                     mass: 2,
+                    sprite: 1,
                     bursts: [
                         {
                             count: 20,
@@ -64,18 +79,21 @@ const Emitter = () => {
 
     }, []);
 
-    return null;
+    return (
+        <points>
+            <particleGeometry maxCount={10000} ref={ref}/>
+            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}}/>
+        </points>
+    )
+
 }
 
 const Bursts = () => {
 
-    const alphaMap = useLoader(TextureLoader, spriteSheet)
-
     return (
         <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
             <OrbitControls/>
-            <Emitter />
-            <ParticleRenderer alphaMap={alphaMap}/>
+            <Particles />
         </Canvas>
     );
 }
