@@ -1,47 +1,25 @@
 import {BufferAttribute, BufferGeometry} from "three";
 import {particleEntities} from "./index";
 
-type ParticleBufferGeometryProps = {
-    maxCount: number
-}
-
 export class ParticleGeometry extends BufferGeometry {
 
-    isParticleRenderer: boolean
-    _maxCount: number
+    isParticleGeometry: boolean
 
-    constructor(parameters: any) {
+    constructor(maxCount = 10000) {
 
         super()
 
-        this._maxCount = 10
+        this.isParticleGeometry = true
 
-        this.isParticleRenderer = true
-        this.type = 'ParticleRenderer'
+        this.type = 'isParticleGeometry'
 
-        this.setAttribute('position', new BufferAttribute(new Float32Array(this._maxCount * 3), 3));
-        this.setAttribute('color', new BufferAttribute(new Float32Array(this._maxCount * 3), 3));
-        this.setAttribute('opacity', new BufferAttribute(new Float32Array(this._maxCount), 1));
-        this.setAttribute('size', new BufferAttribute(new Float32Array(this._maxCount), 1));
-        this.setAttribute('sprite', new BufferAttribute(new Float32Array(this._maxCount), 1));
+        this.setAttribute('position', new BufferAttribute(new Float32Array(maxCount * 3), 3))
+        this.setAttribute('color', new BufferAttribute(new Float32Array(maxCount * 3), 3))
+        this.setAttribute('opacity', new BufferAttribute(new Float32Array(maxCount), 1))
+        this.setAttribute('size', new BufferAttribute(new Float32Array(maxCount), 1))
+        this.setAttribute('sprite', new BufferAttribute(new Float32Array(maxCount), 1))
 
         this.update()
-
-        Object.defineProperties(this, {
-            maxCount: {
-                enumerable: true,
-                get() {
-                    //return this.material.alphaMap
-                },
-                set(value) {
-                    this.setAttribute('position', new BufferAttribute(new Float32Array(value * 3), 3));
-                    this.setAttribute('color', new BufferAttribute(new Float32Array(value * 3), 3));
-                    this.setAttribute('opacity', new BufferAttribute(new Float32Array(value), 1));
-                    this.setAttribute('size', new BufferAttribute(new Float32Array(value), 1));
-                    this.setAttribute('sprite', new BufferAttribute(new Float32Array(value), 1));
-                }
-            },
-        })
 
     }
 

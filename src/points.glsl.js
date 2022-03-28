@@ -74,8 +74,13 @@ void main() {
     // Finally to UV texture coordinates
     // 1.0 - 0,125 - 1 * 0,125 + 0,125 * y
     
-    vec2 uv = vec2(dx * gl_PointCoord.x + col * dx, 1.0 - row * dy - dy * gl_PointCoord.y); // flipY:  1.0 - dy - row * dy + dy * gl_PointCoord.y
-    
+    #if defined( USE_SPRITE )
+        vec2 uv = vec2(dx * gl_PointCoord.x + col * dx, 1.0 - row * dy - dy * gl_PointCoord.y);
+        // flipY:  1.0 - dy - row * dy + dy * gl_PointCoord.y
+    #elif defined( USE_UV )
+        vec2 uv = vec2(gl_PointCoord.x, 1.0 - gl_PointCoord.y);
+    #endif
+
     #if defined( USE_MAP )
         diffuseColor = texture2D( map, uv );
     #endif

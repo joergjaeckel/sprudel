@@ -1,6 +1,4 @@
-import {Color, Matrix3, ShaderChunk, ShaderMaterial, Texture} from "three";
-// @ts-ignore
-import getImageData from "./assets/images/circle_05.png";
+import {Color, Matrix3, ShaderChunk, ShaderMaterial} from "three";
 import {fragment, vertex} from "./points.glsl";
 
 var pattern = /#include <(.*)>/gm;
@@ -17,20 +15,18 @@ function parseIncludes(string: string) {
 //console.log(parseIncludes(vertex));
 //console.log(parseIncludes(fragment));
 
-type ParticleMaterialProps = {
-    alphaMap?: Texture
-}
-
 export class ParticleMaterial extends ShaderMaterial {
 
-    constructor(parameters: ParticleMaterialProps) {
+    constructor() {
 
         super()
 
         this.type = 'ParticleMaterial'
 
         this.vertexShader = vertex
+
         this.fragmentShader = fragment
+
         this.uniforms = {
             diffuse: {value: new Color(0xffffff)},
             opacity: {value: 1.0},
@@ -48,7 +44,7 @@ export class ParticleMaterial extends ShaderMaterial {
         }
 
         this.defines = {
-            'USE_SIZEATTENUATION': 1,
+            USE_SIZEATTENUATION: 1,
         }
 
         this.vertexColors = true
@@ -66,6 +62,15 @@ export class ParticleMaterial extends ShaderMaterial {
                     this.defines.USE_ALPHAMAP = 1
                 }
             },
+            sizeAttenuation: {
+                enumerable: true,
+                get() {
+                    //return this.material.alphaMap
+                },
+                set(value) {
+                    this.defines.USE_SIZEATTENUATION = value
+                }
+            },
             spriteSheetSize: {
                 enumerable: true,
                 get() {
@@ -73,6 +78,7 @@ export class ParticleMaterial extends ShaderMaterial {
                 },
                 set(value) {
                     this.uniforms.spriteSheetSize.value = value
+                    this.defines.USE_SPRITE = 1
                 }
             },
             spriteSize: {
@@ -82,6 +88,7 @@ export class ParticleMaterial extends ShaderMaterial {
                 },
                 set(value) {
                     this.uniforms.spriteSize.value = value
+                    this.defines.USE_SPRITE = 1
                 }
             },
         })
