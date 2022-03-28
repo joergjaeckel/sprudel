@@ -1,11 +1,12 @@
 {
   "name": "sprudel",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "three.js ECS Particle System",
   "keywords": [
     "three",
     "vfx",
     "particle",
+    "trail",
     "effect"
   ],
   "author": "Joerg Jaeckel",
