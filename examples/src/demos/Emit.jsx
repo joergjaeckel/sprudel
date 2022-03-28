@@ -11,6 +11,7 @@ import {
 } from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import {NumberKeyframeTrack, TextureLoader} from "three";
+import GridPlate from "../GridPlate";
 
 
 extend({ParticleGeometry, ParticleMaterial})
@@ -31,13 +32,13 @@ const Particles = () => {
     useEffect(() => {
         const main = world.createEntity(validateParticle({
             particle: true,
-            startSize: 3,
+            size: 3,
             emitting: [
                 {
                     rateOverTime: 0,
                     startLifetime: 1,
                     startSpeed: 0.4,
-                    startSize: 5,
+                    size: 5,
                     sprite: 1,
                     randomizeDirection: 2,
                     bursts: [
@@ -53,7 +54,7 @@ const Particles = () => {
                             rateOverTime: 12,
                             startLifetime: 2,
                             startSpeed: 0.1,
-                            startSize: 5,
+                            size: 3,
                             sprite: 2,
                             randomizeDirection: 0,
                             mass: 0,
@@ -79,8 +80,9 @@ const Particles = () => {
 }
 
 const Bursts = () => (
-    <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
+    <Canvas dpr={[1, 1.5]} camera={{position: [-10, 14, 30], fov: 50}}>
         <OrbitControls />
+        <GridPlate />
         <Particles />
     </Canvas>
 )

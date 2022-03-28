@@ -14,6 +14,7 @@ import {
 import spriteSheet from './assets/images/spritesheet.png'
 import trailSheet from './assets/images/trailsheet.png'
 import {TextureLoader, Vector3} from "three";
+import GridPlate from "../GridPlate";
 
 extend({ParticleGeometry, ParticleMaterial})
 
@@ -33,8 +34,8 @@ const Particles = () => {
     useEffect(() => {
         const start = world.createEntity(validateParticle({
             sprite: 0,
-            startSize: 3,
-            position: new Vector3(-5,0,0),
+            size: 3,
+            position: new Vector3(-5,2,0),
             ribbon: true,
             parent: 99,
             linewidth: 2,
@@ -43,8 +44,8 @@ const Particles = () => {
 
         const end = world.createEntity(validateParticle({
             sprite: 0,
-            startSize: 3,
-            position: new Vector3(5,0,0),
+            size: 3,
+            position: new Vector3(5,2,0),
             ribbon: true,
             parent: 99,
             linewidth: 1,
@@ -72,8 +73,9 @@ const Bursts = () => {
     const [trailMap] = useLoader(TextureLoader, [trailSheet])
 
     return (
-        <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
+        <Canvas dpr={[1, 1.5]} camera={{position: [-10, 14, 30], fov: 50}}>
             <OrbitControls />
+            <GridPlate />
             <Particles />
             <RibbonRenderer alphaMap={trailMap} />
         </Canvas>

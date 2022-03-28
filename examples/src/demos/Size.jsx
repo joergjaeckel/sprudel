@@ -1,17 +1,18 @@
-import {Canvas, extend, useFrame, useThree} from "@react-three/fiber";
+import {Canvas, extend, useFrame} from "@react-three/fiber";
 import {useEffect, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
 import {
     emittingSystem,
     livingSystem,
     movingSystem,
+    scalingSystem,
     world,
     validateParticle,
     ParticleGeometry,
     ParticleMaterial
 } from "sprudel";
-import {Points} from "three";
-import GridPlate from "../GridPlate";
+import {NumberKeyframeTrack} from "three";
+import GridPlate from '../GridPlate'
 
 extend({ParticleGeometry, ParticleMaterial})
 
@@ -19,45 +20,40 @@ const Particles = () => {
 
     const ref = useRef()
 
-    const {scene} = useThree()
-
     useFrame((state, delta) => {
-        emittingSystem(delta);
-        movingSystem(delta);
-        livingSystem(delta);
+        emittingSystem(delta)
+        movingSystem(delta)
+        livingSystem(delta)
+        scalingSystem(delta)
         ref.current.update()
     });
 
     useEffect(() => {
-
-        const geo = new ParticleGeometry()
-
-        ref.current = geo
-
-        const mat = new ParticleMaterial()
-
-        const points = new Points(geo, mat)
-
-        scene.add(points)
-
         const main = world.createEntity(validateParticle({
             size: 3,
             emitting: [
                 {
+                    sprite: 1,
                     rateOverTime: 10,
                     startLifetime: 2,
                     startSpeed: 0.3,
-                    size: 3,
-                    startRotation: [1, 1, 0],
+                    startRotation: [0, 1, 0],
+                    randomizeDirection: 1.5,
+                    sizeOverLifetime: new NumberKeyframeTrack('Particle Size', [0, .2, 1], [0, 1, 0]),
                 },
             ]
         }));
-
+//sizeOverLifetime: new NumberKeyframeTrack('Particle Size', [0, .2, 1], [0, 1, 0]),
         return () => world.destroyEntity(main);
 
     }, []);
 
-    return null
+    return (
+        <points>
+            <particleGeometry ref={ref} />
+            <particleMaterial />
+        </points>
+    )
 
 }
 

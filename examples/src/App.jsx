@@ -1,6 +1,6 @@
 import {Suspense} from 'react'
 import {HashRouter as Router, Link, Route, Routes, useMatch} from 'react-router-dom'
-
+import logo from './logo.png'
 import * as demos from './demos'
 
 const defaultName = 'Simple'
@@ -27,9 +27,10 @@ function Intro() {
                 </Routes>
             </Suspense>
             <Demos/>
-            <a href="https://github.com/joergjaeckel/sprudel" style={{color: 'white'}}>
-                Github
+            <a href="https://github.com/joergjaeckel/sprudel" style={{position: 'absolute', bottom: '40px', right: '35px'}}>
+                <img src={logo} alt="" style={{width: '200px'}}/>
             </a>
+
         </div>
     )
 }
@@ -42,7 +43,7 @@ function Demos() {
         <div className={'demo-panel'}>
             {Object.entries(visibleComponents).map(([name], key) => (
                 <Link key={key} to={`/demo/${name}`} title={name}>
-                    <div className={'spot'} style={{backgroundColor: name === routeName ? 'salmon' : 'white'}}/>
+                    <div className={`spot ${name === routeName && 'selected'}`} />
                 </Link>
             ))}
         </div>
