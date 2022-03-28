@@ -13,12 +13,14 @@ Systems iterate over sets of particles every frame and advance their values acco
 A BufferGeometry reads the values and puts them into its attributes. Vertex and fragment shader uses them to appropriate display each particle.
 
 ## Usage
-
-At the moment sprudel is tested in a react-three-fiber environment. Plain three.js will follow.
+###@react-three/fiber
+At the moment sprudel is tested in a react-three-fiber environment to avoid boilerplate.
+It's designed to be used in both worlds. Below the r3f examples there's a short hint on plain three.js usage.
 
 First, import `ParticleGeometry` and `ParticleMaterial` and extend them to make sure r3f will know them.
 
-```
+```JavaScript
+import {extend} from "@react-three/fiber";
 import {
     ParticleGeometry,
     ParticleMaterial
@@ -27,7 +29,7 @@ import {
 extend({ParticleGeometry, ParticleMaterial})
 ```
 In your Component wrap them in a points object.
-```
+```JavaScript
 const Particles = () => {
     
     return (
@@ -38,9 +40,10 @@ const Particles = () => {
     )
 }
 ```
+
 Since particles will move and change its appearance we need to update a few things and its up to you to do it.
 You need to import the systems from the package.
-```
+```JavaScript
 const Particles = () => {
     
     const ref = useRef()
@@ -66,7 +69,7 @@ At the moment you will directly add entities to the particles world.
 validateParticle is a bad named factory to make sure the entity will hold all components needed to make the particle alive
 and you only need to pass in you custom data. This will definitly change.
 
-```
+```JavaScript
 useEffect(() => {
 
         const main = world.createEntity(validateParticle({
@@ -90,6 +93,18 @@ useEffect(() => {
 
 There are a bunch of examples showing different configurations and behaviours in `/examples`
 
+###three.js
+In plain three.js you just create the objects like you are used to.
+
+```JavaScript
+const geo = new ParticleGeometry()
+const mat = new ParticleMaterial()
+const points = new Points(geo, mat)
+
+scene.add(points)
+```
+You'd call geo.update() and the systems in your render loop and create the particle wherever you want.
+
 ## Performance
 
 By putting all the data into one BufferGeometry it takes only one drawcall disregarding how many particles you display.
@@ -102,7 +117,7 @@ There's the plan to built in an object pool or ring buffer to reuse entities ins
 
 ## Examples
 
-Go to ```/examples``` install the packages and run ```npm run dev``` to show them in your browser.
+Go to `/examples` install the packages and run `npm run dev` to show them in your browser.
 
 ## Changelog
 
