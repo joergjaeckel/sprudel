@@ -1,10 +1,11 @@
-import {World} from 'miniplex'
-import {ColorKeyframeTrack, Interpolant, Vector3} from "three";
+import {IEntity, World} from 'miniplex'
+import {ColorKeyframeTrack, Interpolant, KeyframeTrack, Vector3} from "three";
 
 export const world = new World()
 
 export const movingEntities = world.archetype("speed");
 export const livingEntities = world.archetype("startLifetime");
+export const scalingEntities = world.archetype('sizeOverLifetime');
 
 export const particleEntities = world.archetype("particle");
 export const emittingEntities = world.archetype("emitting");
@@ -34,7 +35,20 @@ export const defaultBurst = {
     cycle: 0,
 }
 
+interface IGeneric {
+    value: number
+    interpolant?: Interpolant
+    keyframes?: KeyframeTrack
+    customFn?: (delta: number) => void
+}
+
 export type Particle = {
+    size: IGeneric
+    sizeOverLifetime?: KeyframeTrack | ((delta: number) => void)
+
+
+
+
     particle?: boolean
     //duration: 2,
     //looping: false,
@@ -80,6 +94,9 @@ export type Particle = {
 }
 
 export const defaultParticle = {
+    size: {value: 1},
+
+
     particle: true,
 
     //duration: 2,
@@ -133,9 +150,37 @@ export const validateBurst = (burst: Burst): Burst => {
 
 }
 
+const evalKeys = ['size']
+
 export const validateParticle = (entity: Particle): Particle => {
 
     const e = Object.assign({}, defaultParticle, entity)
+
+    evalKeys.map(key => {
+        // @ts-ignore
+        const component = entity[`${key}OverLifetime`]
+
+        if (component) {
+
+            // @ts-ignore
+            //typeof component === 'function' && e[key].customFn = component
+            if (component instanceof KeyframeTrack) {
+                // @ts-ignore
+                e[key].interpolant = component.createInterpolant()
+                // @ts-ignore
+                e[key].keyframes = component
+            }
+
+        } else { // @ts-ignore
+            if (entity[key]) { // @ts-ignore
+
+                // @ts-ignore
+                e[key] = {}
+                // @ts-ignore
+                e[key].value = entity[key]
+            }
+        }
+    })
 
     if (entity.startColor) e.color = entity.startColor
     if (entity.startLifetime) e.remainingLifetime = entity.startLifetime
@@ -144,7 +189,7 @@ export const validateParticle = (entity: Particle): Particle => {
         delete e.particle
     }
 
-    /* Is done in the emitting system too otherwise the aprticles will share its evaluation */
+    /* Is done in the emitting system too otherwise the particles will share the interpolants evaluation */
     //@ts-ignore
     if (entity.colorOverLifetime) e.colorInterpolant = entity.colorOverLifetime?.createInterpolant()
 

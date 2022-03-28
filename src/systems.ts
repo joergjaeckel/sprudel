@@ -1,5 +1,5 @@
 import { Vector3 } from "three"
-import {movingEntities, livingEntities, emittingEntities, world, particleEntities} from "./index"
+import {movingEntities, livingEntities, emittingEntities, world, particleEntities, scalingEntities} from "./index"
 
 export const movingSystem = (delta: number) => {
 
@@ -23,8 +23,6 @@ export const movingSystem = (delta: number) => {
         entity.position.add(entity.velocity);
 
         entity.position.y -= entity.mass * delta;
-
-        if (entity.sizeFunction) entity.size = entity.sizeFunction(entity.lifetime / entity.maxAge);
 
     }
 
@@ -99,6 +97,7 @@ export const emittingSystem = (delta: number) => {
                     ...(emitter.emitting && {emitting: emitter.emitting.map(({speedModifier, opacityOverLifetime, ...rest}: {speedModifier: () => void, rest: any}) => ({...structuredClone(rest), speedModifier, opacityOverLifetime}))}),
                     ...(emitter.colorOverLifetime && {colorInterpolant: emitter.colorOverLifetime.createInterpolant()}),
                     ...(emitter.opacityOverLifetime && {opacityInterpolant: emitter.opacityOverLifetime.createInterpolant()}),
+                    ...(emitter.sizeOverLifetime && { size: { interpolant: emitter.sizeOverLifetime.createInterpolant() } }),
                     startLifetime,
                     remainingLifetime: startLifetime,
                     startRotation: startRotation.toArray(),
@@ -121,5 +120,17 @@ export const emittingSystem = (delta: number) => {
     }
 
     world.queue.flush();
+
+};
+
+export const scalingSystem = (delta: number) => {
+
+    for (let i = 0; i < scalingEntities.entities.length; i++) {
+
+        const entity = scalingEntities.entities[i];
+
+        if (entity.size.interpolant) entity.size.value = entity.size.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)[0]
+
+    }
 
 };

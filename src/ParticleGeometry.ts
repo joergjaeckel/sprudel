@@ -30,7 +30,7 @@ export class ParticleGeometry extends BufferGeometry {
             const {
                 position = {x: 0, y: 0, z: 0},
                 opacity = 1,
-                startSize = 1,
+                size = { value: 1 },
                 color = [1, 1, 1],
                 sprite = 0,
             } = particleEntities.entities[i]
@@ -38,7 +38,7 @@ export class ParticleGeometry extends BufferGeometry {
             this.attributes.position.setXYZ(i, position.x, position.y, position.z)
             this.attributes.color.setXYZ(i, color[0], color[1], color[2])
             this.attributes.opacity.setX(i, opacity)
-            this.attributes.size.setX(i, startSize)
+            this.attributes.size.setX(i, size.value)
             this.attributes.sprite.setX(i, sprite)
 
         }
