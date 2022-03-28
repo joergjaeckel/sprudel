@@ -7,7 +7,8 @@ import {
     movingSystem,
     world,
     validateParticle,
-    ParticleGeometry, ParticleMaterial
+    ParticleGeometry,
+    ParticleMaterial,
 } from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import {ColorKeyframeTrack, NumberKeyframeTrack, TextureLoader} from "three";
@@ -61,22 +62,18 @@ const Particles = () => {
 
     return (
         <points>
-            <particleGeometry maxCount={10000} ref={ref}/>
-            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}}/>
+            <particleGeometry ref={ref} />
+            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}} />
         </points>
     )
 
 }
 
-const Simple = () => {
-
-    return (
-        <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
-            <OrbitControls />
-            <Particles />
-        </Canvas>
-    );
-
-}
+const Simple = () => (
+    <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
+        <OrbitControls />
+        <Particles />
+    </Canvas>
+)
 
 export default Simple

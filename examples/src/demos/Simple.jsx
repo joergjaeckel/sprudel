@@ -1,4 +1,4 @@
-import {Canvas, extend, useFrame, useLoader} from "@react-three/fiber";
+import {Canvas, extend, useFrame} from "@react-three/fiber";
 import {useEffect, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
 import {
@@ -10,16 +10,12 @@ import {
     ParticleGeometry,
     ParticleMaterial
 } from "sprudel";
-import spriteSheet from './assets/images/spritesheet.png'
-import {TextureLoader} from "three";
 
 extend({ParticleGeometry, ParticleMaterial})
 
 const Particles = () => {
 
     const ref = useRef()
-
-    const alphaMap = useLoader(TextureLoader, spriteSheet)
 
     useFrame((state, delta) => {
         emittingSystem(delta);
@@ -49,8 +45,8 @@ const Particles = () => {
 
     return (
         <points>
-            <particleGeometry maxCount={10000} ref={ref}/>
-            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}}/>
+            <particleGeometry ref={ref} />
+            <particleMaterial />
         </points>
     )
 

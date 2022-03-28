@@ -71,21 +71,18 @@ const Particles = () => {
 
     return (
         <points>
-            <particleGeometry maxCount={10000} ref={ref}/>
-            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}}/>
+            <particleGeometry ref={ref} />
+            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}} />
         </points>
     )
 
 }
 
-const Bursts = () => {
-
-    return (
-        <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
-            <OrbitControls/>
-            <Particles />
-        </Canvas>
-    );
-}
+const Bursts = () => (
+    <Canvas dpr={[1, 1.5]} camera={{position: [-10, 10, 30], fov: 50}}>
+        <OrbitControls />
+        <Particles />
+    </Canvas>
+)
 
 export default Bursts
