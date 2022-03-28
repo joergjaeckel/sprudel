@@ -13,7 +13,7 @@ Systems iterate over sets of particles every frame and advance their values acco
 A BufferGeometry reads the values and puts them into its attributes. Vertex and fragment shader uses them to appropriate display each particle.
 
 ## Usage
-###@react-three/fiber
+### @react-three/fiber
 At the moment sprudel is tested in a react-three-fiber environment to avoid boilerplate.
 It's designed to be used in both worlds. Below the r3f examples there's a short hint on plain three.js usage.
 
@@ -93,7 +93,7 @@ useEffect(() => {
 
 There are a bunch of examples showing different configurations and behaviours in `/examples`
 
-###three.js
+### three.js
 In plain three.js you just create the objects like you are used to.
 
 ```JavaScript
