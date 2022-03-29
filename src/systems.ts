@@ -1,5 +1,13 @@
 import { Vector3 } from "three"
-import {movingEntities, livingEntities, emittingEntities, world, particleEntities, scalingEntities} from "./index"
+import {
+    movingEntities,
+    livingEntities,
+    emittingEntities,
+    world,
+    particleEntities,
+    scalingEntities,
+    coloringEntities, validateParticle, fadingEntities
+} from "./index"
 
 export const movingSystem = (delta: number) => {
 
@@ -42,10 +50,6 @@ export const livingSystem = (delta: number) => {
             world.queue.destroyEntity(entity)
             continue
         }
-
-        if (entity.colorInterpolant) entity.color = entity.colorInterpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
-
-        if (entity.opacityInterpolant) entity.opacity = entity.opacityInterpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
 
     }
 
@@ -91,26 +95,23 @@ export const emittingSystem = (delta: number) => {
                 const startSpeed = emitter.inheritVelocity ? entity.speed : emitter.startSpeed + Math.random() * emitter.randomizeSpeed - emitter.randomizeSpeed/2
 
                 /* deep cloning objects, otherwise they won't live independent lives */
-                world.queue.createEntity({
+
+                world.queue.createEntity(validateParticle({
                     ...emitter,
-                    // @ts-ignore
-                    ...(emitter.emitting && {emitting: emitter.emitting.map(({speedModifier, opacityOverLifetime, ...rest}: {speedModifier: () => void, rest: any}) => ({...structuredClone(rest), speedModifier, opacityOverLifetime}))}),
-                    ...(emitter.colorOverLifetime && {colorInterpolant: emitter.colorOverLifetime.createInterpolant()}),
-                    ...(emitter.opacityOverLifetime && {opacityInterpolant: emitter.opacityOverLifetime.createInterpolant()}),
+                    ...(emitter.opacityOverLifetime && { opacity: { interpolant: emitter.opacityOverLifetime.createInterpolant() } }),
+                    ...(emitter.colorOverLifetime && { color: { interpolant: emitter.colorOverLifetime.createInterpolant() } }),
                     ...(emitter.sizeOverLifetime && { size: { interpolant: emitter.sizeOverLifetime.createInterpolant() } }),
-                    startLifetime,
-                    remainingLifetime: startLifetime,
-                    startRotation: startRotation.toArray(),
                     position: new Vector3()
                         .copy(entity.position)
                         .addScaledVector(new Vector3().random(), emitter.randomizePosition),
                     velocity: startRotation
                         .addScaledVector(new Vector3().randomDirection(), emitter.randomizeDirection)
                         .setLength(startSpeed),
+                    startLifetime,
                     startSpeed,
                     speed: startSpeed,
                     parent: entity.id
-                });
+                }))
 
             }
 
@@ -123,13 +124,37 @@ export const emittingSystem = (delta: number) => {
 
 };
 
+export const coloringSystem = (delta: number) => {
+
+    for (let i = 0; i < coloringEntities.entities.length; i++) {
+
+        const entity = coloringEntities.entities[i];
+
+        if (entity.color.interpolant) entity.color.value = entity.color.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
+
+    }
+
+};
+
+export const fadingSystem = (delta: number) => {
+
+    for (let i = 0; i < fadingEntities.entities.length; i++) {
+
+        const entity = fadingEntities.entities[i];
+
+        if (entity.opacity.interpolant) entity.opacity.value = entity.opacity.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
+
+    }
+
+};
+
 export const scalingSystem = (delta: number) => {
 
     for (let i = 0; i < scalingEntities.entities.length; i++) {
 
         const entity = scalingEntities.entities[i];
 
-        if (entity.size.interpolant) entity.size.value = entity.size.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)[0]
+        if (entity.size.interpolant) entity.size.value = entity.size.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
 
     }
 

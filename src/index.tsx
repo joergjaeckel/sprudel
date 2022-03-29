@@ -1,11 +1,13 @@
 import {IEntity, World} from 'miniplex'
-import {ColorKeyframeTrack, Interpolant, KeyframeTrack, Vector3} from "three";
+import {ColorKeyframeTrack, Interpolant, KeyframeTrack, NumberKeyframeTrack, Vector3} from "three";
 
 export const world = new World()
 
 export const movingEntities = world.archetype("speed");
 export const livingEntities = world.archetype("startLifetime");
 export const scalingEntities = world.archetype('sizeOverLifetime');
+export const coloringEntities = world.archetype('colorOverLifetime');
+export const fadingEntities = world.archetype('opacityOverLifetime');
 
 export const particleEntities = world.archetype("particle");
 export const emittingEntities = world.archetype("emitting");
@@ -36,20 +38,26 @@ export const defaultBurst = {
 }
 
 interface IGeneric {
-    value: number
+    value: number[]
     interpolant?: Interpolant
     keyframes?: KeyframeTrack
     customFn?: (delta: number) => void
 }
 
 export type Particle = {
-    size: IGeneric
-    sizeOverLifetime?: KeyframeTrack | ((delta: number) => void)
-
-
-
 
     particle?: boolean
+    hideParticle?: boolean
+
+    color?: IGeneric
+    colorOverLifetime?: ColorKeyframeTrack | ((delta: number) => void)
+
+    size?: IGeneric
+    sizeOverLifetime?: NumberKeyframeTrack | ((delta: number) => void)
+
+    opacity?: IGeneric
+    opacityOverLifetime?: NumberKeyframeTrack | ((delta: number) => void)
+
     //duration: 2,
     //looping: false,
     //prewarm: false,
@@ -57,29 +65,22 @@ export type Particle = {
 
     startLifetime: number
     startSpeed: number
-    startSize: number
     startPosition: [number, number, number]
     startRotation: [number, number, number]
     //flipRotation: false,
-    startColor: [number, number, number]
     //gravityModifier: 0,
 
     rateOverTime: number
     //rateOverDistance: 0,
 
     //velocityOverLifetime
-    //speedModifier: { evaluate: (t: number) => t },
 
     randomizePosition: number
     randomizeDirection: number
     randomizeSpeed: number
     randomizeLifetime: number
 
-    //sizeOverLifetime: bezier(),
     mass: number
-    //colorOverLifetime: (t) => ({r: Math.pow(1 - t / 3, 9) + 0.1, g: 0.1, b: 0.1}),
-    //opacityOverLifetime: (t) => (1 - t / 3) * 0.4,
-    //sizeFunction: (t) => smoke.initialSize + 10 * smoke.sizeFunction.evaluate(t)
 
     sprite: number
 
@@ -87,17 +88,18 @@ export type Particle = {
 
     emitting?: Particle[]
     bursts?: Burst[]
-    colorOverLifetime?: ColorKeyframeTrack
-    colorInterpolant?: Interpolant
-    color: [number, number, number]
-    remaininglifetime: number,
+
+    remainingLifetime: number,
 }
 
 export const defaultParticle = {
-    size: {value: 1},
-
 
     particle: true,
+
+    size: { value: [1] },
+    opacity: { value: [1] },
+    color: { value: [1, 1, 1] },
+
 
     //duration: 2,
     //looping: false,
@@ -110,7 +112,6 @@ export const defaultParticle = {
     startPosition: [0, 0, 0],
     startRotation: [0, 0, 0],
     //flipRotation: false,
-    startColor: [1, 1, 1],
     //gravityModifier: 0,
 
     rateOverTime: 1,
@@ -124,22 +125,15 @@ export const defaultParticle = {
     randomizeSpeed: 0,
     randomizeLifetime: 0,
 
-    //sizeOverLifetime: bezier(),
     mass: 1,
-    //colorOverLifetime: (t) => ({r: Math.pow(1 - t / 3, 9) + 0.1, g: 0.1, b: 0.1}),
-    //opacityOverLifetime: (t) => (1 - t / 3) * 0.4,
-    //sizeFunction: (t) => smoke.initialSize + 10 * smoke.sizeFunction.evaluate(t)
 
     sprite: 0,
 
     inheritVelocity: false,
 
-    //emitting: undefined,
-
     /* Created for internal usage */
     remainingLifetime: 1,
     operationalLifetime: 0,
-    //velocity: new Vector3(),
     position: new Vector3(),
     accumulate: 0,
 };
@@ -150,51 +144,47 @@ export const validateBurst = (burst: Burst): Burst => {
 
 }
 
-const evalKeys = ['size']
+const evalKeys = ['size', 'color', 'opacity']
 
 export const validateParticle = (entity: Particle): Particle => {
 
-    const e = Object.assign({}, defaultParticle, entity)
+    const e = Object.assign({}, defaultParticle, entity) as Particle
 
     evalKeys.map(key => {
-        // @ts-ignore
-        const component = entity[`${key}OverLifetime`]
 
-        if (component) {
+        const component = entity[`${key}OverLifetime` as keyof Particle]
+
+        /* parse static color from array */
+        // @ts-ignore non-changing color
+        if (Array.isArray(entity[key])) e[key] = { value: entity[key] }
+
+        /* parse static opacity or size from number */
+        // @ts-ignore
+        if (typeof entity[key] === 'number') e[key] = { value:[ entity[key] ] }
+
+        /* parse dynamic ...OverLifetime props from KeyframeTrack */
+        if (component && component instanceof KeyframeTrack) {
+
+            //@ts-ignore
+            e[key].interpolant = component.createInterpolant()
 
             // @ts-ignore
-            //typeof component === 'function' && e[key].customFn = component
-            if (component instanceof KeyframeTrack) {
-                // @ts-ignore
-                e[key].interpolant = component.createInterpolant()
-                // @ts-ignore
-                e[key].keyframes = component
-            }
+            e[key].keyframes = component
 
-        } else { // @ts-ignore
-            if (entity[key]) { // @ts-ignore
+            // @ts-ignore
+            e[key].value = e[key].interpolant.evaluate(0)
 
-                // @ts-ignore
-                e[key] = {}
-                // @ts-ignore
-                e[key].value = entity[key]
-            }
         }
+
     })
 
-    if (entity.startColor) e.color = entity.startColor
     if (entity.startLifetime) e.remainingLifetime = entity.startLifetime
 
-    if (entity.particle === false) { // @ts-ignore
-        delete e.particle
-    }
+    if (entity.bursts) e.bursts = entity.bursts?.map((burst: Burst) => validateBurst(burst))
 
-    /* Is done in the emitting system too otherwise the particles will share the interpolants evaluation */
-    //@ts-ignore
-    if (entity.colorOverLifetime) e.colorInterpolant = entity.colorOverLifetime?.createInterpolant()
+    if (entity.emitting) e.emitting = entity.emitting?.map((emitter: Particle) => validateParticle(emitter))
 
-    if (entity.bursts) e.bursts = entity.bursts?.map((e: Burst) => validateBurst(e))
-    if (entity.emitting) e.emitting = entity.emitting?.map((e: Particle) => validateParticle(e))
+    if (e.hideParticle) delete e.particle
 
     return e
 }

@@ -5,6 +5,8 @@ import {
     emittingSystem,
     livingSystem,
     movingSystem,
+    coloringSystem,
+    fadingSystem,
     world,
     validateParticle,
     ParticleGeometry,
@@ -23,9 +25,11 @@ const Particles = () => {
     const alphaMap = useLoader(TextureLoader, spriteSheet)
 
     useFrame((state, delta) => {
-        emittingSystem(delta);
-        movingSystem(delta);
-        livingSystem(delta);
+        emittingSystem(delta)
+        movingSystem(delta)
+        coloringSystem(delta)
+        livingSystem(delta)
+        fadingSystem(delta)
         ref.current.update()
     });
 

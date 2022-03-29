@@ -1,4 +1,4 @@
-import {BufferAttribute, BufferGeometry} from "three";
+import {BufferAttribute, BufferGeometry, Color} from "three";
 import {particleEntities} from "./index";
 
 export class ParticleGeometry extends BufferGeometry {
@@ -29,16 +29,16 @@ export class ParticleGeometry extends BufferGeometry {
 
             const {
                 position = {x: 0, y: 0, z: 0},
-                opacity = 1,
-                size = { value: 1 },
-                color = [1, 1, 1],
+                opacity = { value: [1] },
+                size = { value: [1] },
+                color = { value: [1, 1, 1] },
                 sprite = 0,
             } = particleEntities.entities[i]
 
             this.attributes.position.setXYZ(i, position.x, position.y, position.z)
-            this.attributes.color.setXYZ(i, color[0], color[1], color[2])
-            this.attributes.opacity.setX(i, opacity)
-            this.attributes.size.setX(i, size.value)
+            this.attributes.color.setXYZ(i, color.value[0], color.value[1], color.value[2])
+            this.attributes.opacity.setX(i, opacity.value[0])
+            this.attributes.size.setX(i, size.value[0])
             this.attributes.sprite.setX(i, sprite)
 
         }

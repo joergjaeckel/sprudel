@@ -6,13 +6,13 @@ import {
     emittingSystem,
     livingSystem,
     movingSystem,
+    fadingSystem,
     world,
     ParticleGeometry, ParticleMaterial
 } from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import {NumberKeyframeTrack, TextureLoader} from "three";
 import GridPlate from "../GridPlate";
-
 
 extend({ParticleGeometry, ParticleMaterial})
 
@@ -23,9 +23,10 @@ const Particles = () => {
     const alphaMap = useLoader(TextureLoader, spriteSheet)
 
     useFrame((state, delta) => {
-        emittingSystem(delta);
-        movingSystem(delta);
-        livingSystem(delta);
+        emittingSystem(delta)
+        movingSystem(delta)
+        livingSystem(delta)
+        fadingSystem(delta)
         ref.current.update()
     });
 

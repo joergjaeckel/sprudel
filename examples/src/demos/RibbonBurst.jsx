@@ -37,7 +37,7 @@ const Particles = () => {
             size: 3,
             emitting: [
                 {
-                    particle: false,
+                    hideParticle: true,
                     rateOverTime: 0,
                     startLifetime: 2,
                     startSpeed: 0.3,
@@ -55,7 +55,7 @@ const Particles = () => {
                     ],
                     emitting: [
                         {
-                            particle: false,
+                            hideParticle: true,
                             rateOverTime: 30,
                             startLifetime: 1,
                             startSpeed: 0,
