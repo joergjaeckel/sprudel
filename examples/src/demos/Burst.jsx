@@ -37,7 +37,7 @@ const Particles = () => {
                     rateOverTime: 0,
                     startLifetime: 2,
                     startSpeed: 0.2,
-                    size: 2,
+                    size: 4,
                     sprite: 1,
                     randomizeDirection: 2,
                     randomizeLifetime: .75,
@@ -71,6 +71,7 @@ const Bursts = () => {
 
     return (
         <Canvas dpr={[1, 1.5]} camera={{position: [-10, 14, 30], fov: 50}}>
+            <color attach="background" args={[0x131228]} />
             <OrbitControls/>
             <GridPlate />
             <Particles/>

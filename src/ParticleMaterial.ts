@@ -1,4 +1,13 @@
-import {Color, Matrix3, ShaderChunk, ShaderMaterial} from "three";
+import {
+    AddEquation,
+    Color,
+    CustomBlending,
+    Matrix3,
+    OneFactor,
+    OneMinusSrcAlphaFactor,
+    ShaderChunk,
+    ShaderMaterial
+} from "three";
 import {fragment, vertex} from "./points.glsl";
 
 var pattern = /#include <(.*)>/gm;
@@ -47,9 +56,25 @@ export class ParticleMaterial extends ShaderMaterial {
             USE_SIZEATTENUATION: 1,
         }
 
-        this.vertexColors = true
-        this.transparent = true
+        /*
+        Blending optimized for glowing, light particles
+        https://gdcvault.com/play/1017660/Technical-Artist-Bootcamp-The-VFX
+        https://github.com/simondevyoutube/ThreeJS_Tutorial_BlendModes
+        https://youtu.be/AxopC4yW4uY
+        also the last two lines of the fragment shader were added
+        possibly pass in an animatable value for emission level like simon did
+        */
+        this.blending = CustomBlending
+        this.blendEquation = AddEquation
+        this.blendSrc = OneFactor
+        this.blendDst = OneMinusSrcAlphaFactor
+
+        this.depthTest = true
         this.depthWrite = false
+
+        this.vertexColors = true
+
+        this.transparent = true
 
         Object.defineProperties(this, {
             alphaMap: {

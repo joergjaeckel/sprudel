@@ -82,6 +82,7 @@ const Particles = () => {
 
 const Bursts = () => (
     <Canvas dpr={[1, 1.5]} camera={{position: [-10, 14, 30], fov: 50}}>
+        <color attach="background" args={[0x131228]} />
         <OrbitControls />
         <GridPlate />
         <Particles />

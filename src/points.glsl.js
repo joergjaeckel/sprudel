@@ -92,11 +92,16 @@ void main() {
 	//include <map_particle_fragment>
 	#include <color_fragment>
 	#include <alphatest_fragment>
+	
 	outgoingLight = diffuseColor.rgb;
 	#include <output_fragment>
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>
 	#include <premultiplied_alpha_fragment>
+	
+	gl_FragColor.xyz *= gl_FragColor.w;
+    gl_FragColor.w *= 0.0;
+    
 }
 `;
