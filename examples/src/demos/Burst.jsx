@@ -37,14 +37,15 @@ const Particles = () => {
                     rateOverTime: 0,
                     startLifetime: 2,
                     startSpeed: 0.2,
-                    size: 4,
+                    color: [1, 0, .4],
+                    size: 5,
                     sprite: 1,
                     randomizeDirection: 2,
                     randomizeLifetime: .75,
                     randomizeSpeed: .05,
                     bursts: [
                         {
-                            count: 100,
+                            count: 80,
                             cycleCount: -1,
                             repeatInterval: 1,
                             time: 0,

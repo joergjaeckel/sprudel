@@ -47,7 +47,7 @@ const Particles = () => {
                     startRotation: [0, 1, 0],
                     randomizeDirection: .1,
                     mass: -2,
-                    colorOverLifetime: new ColorKeyframeTrack('Particle Color', [0, .25, .8], [1, 1, 1, 1, 1, 0, 1, 0, 0]),
+                    colorOverLifetime: new ColorKeyframeTrack('Particle Color', [0, .25, .8], [0, 0, .5, .4, 0, 1, 1, 0, 0]),
                     opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .2, 0.8, 1], [0, 1, .8, 0]),
                     bursts: [
                         {

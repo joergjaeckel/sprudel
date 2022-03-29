@@ -39,9 +39,12 @@ const Particles = () => {
                     rateOverTime: 0,
                     startLifetime: 1,
                     startSpeed: 0.4,
-                    size: 5,
+                    size: 3,
                     sprite: 1,
                     randomizeDirection: 2,
+                    startRotation: [0, 1, 0],
+                    color: [2, 2, 2],
+                    opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .66, 1], [1, .85, 0]),
                     bursts: [
                         {
                             count: 10,
@@ -52,15 +55,16 @@ const Particles = () => {
                     ],
                     emitting: [
                         {
-                            rateOverTime: 12,
+                            rateOverTime: 30,
                             startLifetime: 2,
-                            startSpeed: 0.1,
-                            size: 3,
-                            sprite: 2,
-                            randomizeDirection: 0,
-                            mass: 0,
+                            startSpeed: 0.05,
+                            size: 6,
+                            sprite: 1,
+                            randomizeDirection: 2,
+                            mass: 0.3,
                             startRotation: [0, 0, 0],
-                            opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .6, 1], [1, 1, 0]),
+                            color: [.6, 0, 2],
+                            opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .6, 1], [.3, .2, 0]),
                         },
                     ]
                 },
