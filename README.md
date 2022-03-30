@@ -214,6 +214,13 @@ Go to `/examples` install the packages and run `npm run dev` to show them in you
 
 ## Changelog
 
+### v0.0.2 30-3-22
+* Separated systems into concerns. Color, size and opacity are handled individually now.
+* Changed blending to Blend Add
+* Renamed randomizeDirection to randomizeRotation
+* Added a lot of documentation
+* Polished examples
+
 ### v0.0.1 28-3-22
 * Refactored particle rendering to plain three.js geometry and material
 * Added a lot of documentation
