@@ -76,7 +76,7 @@ export type Particle = {
     //velocityOverLifetime
 
     randomizePosition: number
-    randomizeDirection: number
+    randomizeRotation: number
     randomizeSpeed: number
     randomizeLifetime: number
 
@@ -119,10 +119,10 @@ export const defaultParticle = {
     //velocityOverLifetime
     speedModifier: 0.95,
 
-    randomizePosition: 0,
-    randomizeDirection: 0,
-    randomizeSpeed: 0,
     randomizeLifetime: 0,
+    randomizeSpeed: 0,
+    randomizePosition: 0,
+    randomizeRotation: 0,
 
     mass: 1,
 

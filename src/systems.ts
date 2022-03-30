@@ -105,7 +105,7 @@ export const emittingSystem = (delta: number) => {
                         .copy(entity.position)
                         .addScaledVector(new Vector3().random(), emitter.randomizePosition),
                     velocity: startRotation
-                        .addScaledVector(new Vector3().randomDirection(), emitter.randomizeDirection)
+                        .addScaledVector(new Vector3().randomDirection(), emitter.randomizeRotation)
                         .setLength(startSpeed),
                     startLifetime,
                     startSpeed,
