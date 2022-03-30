@@ -7,11 +7,13 @@ import {
     livingSystem,
     movingSystem,
     fadingSystem,
+    scalingSystem,
+    coloringSystem,
     world,
     ParticleGeometry, ParticleMaterial
 } from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
-import {NumberKeyframeTrack, TextureLoader} from "three";
+import {ColorKeyframeTrack, NumberKeyframeTrack, TextureLoader} from "three";
 import GridPlate from "../GridPlate";
 
 extend({ParticleGeometry, ParticleMaterial})
@@ -27,6 +29,8 @@ const Particles = () => {
         movingSystem(delta)
         livingSystem(delta)
         fadingSystem(delta)
+        coloringSystem(delta)
+        scalingSystem(delta)
         ref.current.update()
     });
 
@@ -47,7 +51,7 @@ const Particles = () => {
                     opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .66, 1], [1, .85, 0]),
                     bursts: [
                         {
-                            count: 10,
+                            count: 8,
                             cycleCount: -1,
                             repeatInterval: 1,
                             time: 0,
@@ -55,7 +59,7 @@ const Particles = () => {
                     ],
                     emitting: [
                         {
-                            rateOverTime: 30,
+                            rateOverTime: 45,
                             startLifetime: 2,
                             startSpeed: 0.05,
                             size: 6,
@@ -64,7 +68,22 @@ const Particles = () => {
                             mass: 0.3,
                             startRotation: [0, 0, 0],
                             color: [.6, 0, 2],
-                            opacityOverLifetime: new NumberKeyframeTrack('Particle Opacity', [0, .6, 1], [.3, .2, 0]),
+                            sizeOverLifetime: new NumberKeyframeTrack('Glowing Smoke Size', [0, 1], [3, 7]),
+                            opacityOverLifetime: new NumberKeyframeTrack('Glowing Smoke Opacity', [0, .6, 1], [.3, .2, 0]),
+                            colorOverLifetime: new ColorKeyframeTrack('Glowing Smoke Color', [0, .7], [.6, 0, 2, 0, 0, 0]),
+                        },
+                        {
+                            rateOverTime: 20,
+                            startLifetime: 1,
+                            startSpeed: 0.05,
+                            size: .5,
+                            sprite: 12,
+                            randomizeDirection: .2,
+                            mass: 1.5,
+                            startRotation: [0, 0, 0],
+                            color: [4, 4, 4],
+                            opacity: 3,
+                            sizeOverLifetime: new NumberKeyframeTrack('Sparkles Size', [0, 1], [.5, 0]),
                         },
                     ]
                 },
