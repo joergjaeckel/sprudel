@@ -77,10 +77,10 @@ useEffect(() => {
             emitting: [
                 {
                     sprite: 1,
+                    size: 3,
                     rateOverTime: 10,
                     startLifetime: 2,
                     startSpeed: 0.3,
-                    startSize: 3,
                     startRotation: [1, 1, 0],
                 },
             ]
@@ -104,6 +104,99 @@ const points = new Points(geo, mat)
 scene.add(points)
 ```
 You'd call geo.update() and the systems in your render loop and create the particle wherever you want.
+
+## Properties
+
+Your Particle System is defined by a data structure.
+
+### Emitting
+
+Each particle you create or emit can be an emitter too. Emitting can be done by a rate over time, defining how many particles shall be emitted in a second.
+Props in an emitting object describe the particles that will be emitted. 
+
+```JavaScript
+{
+    emitting: [
+        {
+            rateOverTime: 10,
+            startLifetime: 1,
+            size: 4,
+            // ...
+        },
+        {
+            rateOverTime: 30,
+            startLifetime: .5,
+            color: [1, 0, 0],
+            // ...
+        }
+    ]
+}
+```
+Or you create bursts which emit an amount of particles at the same time. By setting rateOverTime to zero, particles are only emitted by the burst. 
+
+You can have multiple emitters and bursts on the same particle.
+
+```JavaScript
+{
+    emitting: [
+        {
+            // ...
+            rateOverTime: 0,
+            startLifetime: 2,
+            bursts: [
+                {
+                    count: 80,
+                    cycleCount: -1,
+                    repeatInterval: 1,
+                    time: 0,
+                }
+            ],
+        }
+    ]
+}
+```
+
+### Appearance
+
+Visuals can be static or change over lifetime. It's simple like that.
+
+```JavaScript
+const particle = {
+    color: [1, 1, 1],
+    size: 1,
+    opacity: 1,
+    // ...
+}
+```
+
+To change appearance over lifetime, assign a …OverLifetime prop. We use the three.js KeyframeTracks.
+
+```JavaScript
+const particle = {
+    sizeOverLifetime: new NumberKeyframeTrack('Glowing Smoke Size', [0, 1], [3, 7]),
+    opacityOverLifetime: new NumberKeyframeTrack('Glowing Smoke Opacity', [0, .6, 1], [.3, .2, 0]),
+    colorOverLifetime: new ColorKeyframeTrack('Glowing Smoke Color', [0, .7], [.6, 0, 2, 0, 0, 0]),
+    // ...
+}
+```
+
+### Behaviour
+
+There are several props influencing particle and emitting behaviour.
+
+| Prop                | Description                             |
+|---------------------|-----------------------------------------|
+| `startDelay`        | time to wait until animation starts     |
+| `startLifetime`     | initial lifetime (maximum age)          |     
+| `startSpeed`        | initial speed                           |     
+| `startPosition`     | initial position                        |     
+| `startRotation`     | initial rotation                        |     
+| `randomizeLifetime` | randomize initial lifetime              |     
+| `randomizeSpeed`    | randomize initial speed                 |     
+| `randomizePosition` | randomize initial position              |     
+| `randomizeRotation` | randomize initial rotation              |     
+| `speedModifier`     | factor to change speed every frame      |     
+| `mass`              | factor to change y-position every frame |     
 
 ## Performance
 
