@@ -108,7 +108,6 @@ export const defaultParticle = {
 
     startLifetime: -1,
     startSpeed: 1,
-    startSize: 1,
     startPosition: [0, 0, 0],
     startRotation: [0, 0, 0],
     //flipRotation: false,
