@@ -2,22 +2,23 @@ import {Canvas, extend, useFrame, useLoader} from "@react-three/fiber";
 import {useEffect, useMemo, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
 import {
-    validateParticle,
-    RibbonRenderer,
+    ParticleSystem,
     ParticleGeometry,
     ParticleMaterial,
-    ParticleSystem,
+    RibbonGeometry,
+    RibbonMaterial,
 } from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import {TextureLoader} from "three";
 import trailSheet from "./assets/images/trailsheet.png";
 import GridPlate from "../GridPlate";
 
-extend({ParticleGeometry, ParticleMaterial})
+extend({ParticleGeometry, ParticleMaterial, RibbonGeometry, RibbonMaterial})
 
 const Particles = () => {
 
-    const ref = useRef()
+    const particleRef = useRef()
+    const ribbonRef = useRef()
 
     const [alphaMap, trailMap] = useLoader(TextureLoader, [spriteSheet, trailSheet])
 
@@ -25,7 +26,8 @@ const Particles = () => {
 
     useFrame((state, delta) => {
         particleSystem.update(delta)
-        ref.current.update()
+        particleRef.current.update()
+        ribbonRef.current.update()
     });
 
     useEffect(() => {
@@ -73,10 +75,13 @@ const Particles = () => {
     return (
         <>
             <points>
-                <particleGeometry ref={ref} args={[particleSystem]}/>
+                <particleGeometry ref={particleRef} args={[particleSystem]}/>
                 <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}} />
             </points>
-            <RibbonRenderer entities={particleSystem.ribbonEntities} alphaMap={trailMap} />
+            <mesh>
+                <ribbonGeometry ref={ribbonRef} args={[particleSystem]} />
+                <ribbonMaterial alphaMap={trailMap} />
+            </mesh>
         </>
     )
 

@@ -2,7 +2,7 @@ import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import image from '@rollup/plugin-image'
 
-const external = ['react', 'react/jsx-runtime', '@react-three/fiber', 'three']
+const external = ['miniplex', 'react/jsx-runtime', 'three']
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.json', '.png']
 
 const getBabelOptions = ({ useESModules }, targets) => ({
@@ -13,7 +13,6 @@ const getBabelOptions = ({ useESModules }, targets) => ({
   plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
   presets: [
     ['@babel/preset-env', { loose: true, modules: false, targets }],
-    ['@babel/preset-react', { runtime: 'automatic' }],
     '@babel/preset-typescript',
   ],
 })
@@ -21,7 +20,7 @@ const getBabelOptions = ({ useESModules }, targets) => ({
 export default [
   {
     external,
-    input: `./src/index.tsx`,
+    input: `./src/index.ts`,
     output: { dir: 'dist', format: 'esm' },
     plugins: [
       image(),

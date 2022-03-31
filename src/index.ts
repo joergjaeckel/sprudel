@@ -5,7 +5,8 @@ export * from './ParticleSystem'
 export * from './ParticleGeometry'
 export * from './ParticleMaterial'
 
-export * from './RibbonRenderer'
+export * from './RibbonGeometry'
+export * from './RibbonMaterial'
 
 export * from './systems'
 
