@@ -214,6 +214,13 @@ Go to `/examples` install the packages and run `npm run dev` to show them in you
 
 ## Changelog
 
+### v0.0.4 31-3-22
+* Clean build and publish 
+
+### v0.0.3 31-3-22
+* Refactored RibbonRenderer to plain three.js 
+* Removed all react dependencies from src 
+
 ### v0.0.2 31-3-22
 * Separated systems into concerns. Color, size and opacity are handled individually now.
 * Allow multiple instances by creating a new world along with a new ParticleSystem
