@@ -11,7 +11,7 @@ export const livingSystem = (entities: Particle[], world: World, delta: number) 
 
         entity.remainingLifetime -= delta
 
-        entity.operationalLifetime = entity.startLifetime - entity.remainingLifetime
+        entity.operationalLifetime += delta
 
         if (entity.startLifetime !== -1 && entity.remainingLifetime <= 0) world.queue.destroyEntity(entity)
 
@@ -42,7 +42,7 @@ export const emittingSystem = (entities: (Particle & {emitting: Particle[]})[], 
 
                     if (burst.cycleCount > 0 && burst.cycle >= burst.cycleCount) continue
 
-                    if (entity.operationalLifetime >= burst.time && burst.cycle < Math.floor(entity.operationalLifetime / burst.repeatInterval)) {
+                    if (entity.operationalLifetime >= burst.time && burst.cycle < Math.floor(entity.operationalLifetime / burst.repeatInterval + burst.repeatInterval)) {
                         burst.cycle++
                         emitter.accumulate += burst.count
                     }
