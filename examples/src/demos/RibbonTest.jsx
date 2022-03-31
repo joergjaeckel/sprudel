@@ -1,15 +1,12 @@
 import {Canvas, extend, useFrame, useLoader} from "@react-three/fiber";
-import {useEffect, useRef} from "react";
+import {useEffect, useMemo, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
 import {
     validateParticle,
-    emittingSystem,
-    livingSystem,
-    movingSystem,
-    world,
     RibbonRenderer,
     ParticleGeometry,
     ParticleMaterial,
+    ParticleSystem,
 } from "sprudel";
 import spriteSheet from './assets/images/spritesheet.png'
 import trailSheet from './assets/images/trailsheet.png'
@@ -22,17 +19,17 @@ const Particles = () => {
 
     const ref = useRef()
 
-    const alphaMap = useLoader(TextureLoader, spriteSheet)
+    const [alphaMap, trailMap] = useLoader(TextureLoader, [spriteSheet, trailSheet])
+
+    const particleSystem = useMemo(() => new ParticleSystem(), [])
 
     useFrame((state, delta) => {
-        emittingSystem(delta);
-        movingSystem(delta);
-        livingSystem(delta);
+        particleSystem.update(delta)
         ref.current.update()
     });
 
     useEffect(() => {
-        const start = world.createEntity(validateParticle({
+        const start = particleSystem.addParticle({
             sprite: 0,
             size: 3,
             position: new Vector3(-5,2,0),
@@ -40,9 +37,9 @@ const Particles = () => {
             parent: 99,
             linewidth: 2,
             color: [1,0,0],
-        }));
+        })
 
-        const end = world.createEntity(validateParticle({
+        const end = particleSystem.addParticle({
             sprite: 0,
             size: 3,
             position: new Vector3(5,2,0),
@@ -50,27 +47,28 @@ const Particles = () => {
             parent: 99,
             linewidth: 1,
             color: [0,0,1],
-        }));
+        })
 
         return () => {
-            world.destroyEntity(start)
-            world.destroyEntity(end)
+            particleSystem.destroyParticle(start)
+            particleSystem.destroyParticle(end)
         }
 
-    }, []);
+    }, [])
 
     return (
-        <points>
-            <particleGeometry ref={ref} />
-            <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}} />
-        </points>
+        <>
+            <points>
+                <particleGeometry ref={ref} args={[particleSystem]}/>
+                <particleMaterial alphaMap={alphaMap} spriteSize={{x: 128, y: 128}} spriteSheetSize={{x: 1024, y: 1024}} />
+            </points>
+            <RibbonRenderer alphaMap={trailMap} entities={particleSystem.ribbonEntities} />
+        </>
     )
 
 }
 
 const Bursts = () => {
-
-    const [trailMap] = useLoader(TextureLoader, [trailSheet])
 
     return (
         <Canvas dpr={[1, 1.5]} camera={{position: [-10, 14, 30], fov: 50}}>
@@ -78,7 +76,6 @@ const Bursts = () => {
             <OrbitControls />
             <GridPlate />
             <Particles />
-            <RibbonRenderer alphaMap={trailMap} />
         </Canvas>
     );
 }

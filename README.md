@@ -41,38 +41,36 @@ const Particles = () => {
 }
 ```
 
-Since particles will move and change its appearance we need to update a few things and its up to you to do it.
-You need to import the systems from the package.
+Since particles will move and change its appearance we need to update a few things and its up to you to trigger it.
+You need to create the ParticleSystem and update both, the geometry and the system.
+
 ```JavaScript
 const Particles = () => {
     
     const ref = useRef()
-    
+
+    const particleSystem = useMemo(() => new ParticleSystem(), [])
+
     useFrame((state, delta) => {
-        emittingSystem(delta);
-        movingSystem(delta);
-        livingSystem(delta);
+        particleSystem.update(delta)
         ref.current.update()
     });
     
     return (
         <points>
-            <particleGeometry ref={ref} />
+            <particleGeometry args={[particleSystem]} ref={ref} />
             <particleMaterial />
         </points>
     )
 }
 ```
 
-Now you are ready to add your first particle to your scene. world and validateParticle are imports, too. 
-At the moment you will directly add entities to the particles world.
-validateParticle is a bad named factory to make sure the entity will hold all components needed to make the particle alive
-and you only need to pass in you custom data. This will definitly change.
+Now you are ready to add your first particle to your scene.
 
 ```JavaScript
 useEffect(() => {
 
-        const main = world.createEntity(validateParticle({
+        const main = particleSystem.addParticle({
             startSize: 3,
             emitting: [
                 {
@@ -84,9 +82,9 @@ useEffect(() => {
                     startRotation: [1, 1, 0],
                 },
             ]
-        }));
+        });
 
-        return () => world.destroyEntity(main);
+        return () => particleSystem.destroyParticle(main);
 
     }, []);
 ```
@@ -94,6 +92,7 @@ useEffect(() => {
 There are a bunch of examples showing different configurations and behaviours in `/examples`
 
 ### three.js
+
 In plain three.js you just create the objects like you are used to.
 
 ```JavaScript
@@ -103,6 +102,7 @@ const points = new Points(geo, mat)
 
 scene.add(points)
 ```
+
 You'd call geo.update() and the systems in your render loop and create the particle wherever you want.
 
 ## Properties
@@ -214,8 +214,10 @@ Go to `/examples` install the packages and run `npm run dev` to show them in you
 
 ## Changelog
 
-### v0.0.2 30-3-22
+### v0.0.2 31-3-22
 * Separated systems into concerns. Color, size and opacity are handled individually now.
+* Allow multiple instances by creating a new world along with a new ParticleSystem
+* Entity creation moved inside ParticleSystem and aliased with addParticle and destroyParticle
 * Changed blending to Blend Add
 * Renamed randomizeDirection to randomizeRotation
 * Added a lot of documentation

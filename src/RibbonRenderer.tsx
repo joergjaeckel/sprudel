@@ -12,8 +12,9 @@ import {
 } from "three";
 import { mergeUniforms } from "three/src/renderers/shaders/UniformsUtils.js";
 import { useEffect, useMemo, useRef } from "react";
-import { ribbonEntities } from "./index";
 import { vertex } from "./ribbons.glsl";
+import { Particle } from "./index";
+import {Archetype} from "miniplex";
 
 var pattern = /#include <(.*)>/gm;
 
@@ -44,7 +45,7 @@ const testPoints = {
     ]
 };
 
-export const RibbonRenderer = ({ alphaMap, wireframe, maxCount = 10000 }: {alphaMap: Texture, wireframe: boolean, maxCount: number}) => {
+export const RibbonRenderer = ({ entities, alphaMap, wireframe, maxCount = 10000 }: {entities: Archetype<any>, alphaMap: Texture, wireframe: boolean, maxCount: number}) => {
     const ref = useRef<BufferGeometry>();
 
     const positions = useMemo(() => new Float32Array(maxCount * 3), []);
@@ -89,10 +90,10 @@ export const RibbonRenderer = ({ alphaMap, wireframe, maxCount = 10000 }: {alpha
 
         let _sorted = [];
 
-        for (let i = 0; i < ribbonEntities.entities.length; i++) {
-            const e = ribbonEntities.entities[i];
+        for (let i = 0; i < entities.entities.length; i++) {
+            const e = entities.entities[i];
             const array = _sorted[e.parent];
-            array ? array.push(ribbonEntities.entities[i]) : (_sorted[e.parent] = [e]);
+            array ? array.push(entities.entities[i]) : (_sorted[e.parent] = [e]);
         }
 
         //normalize indices

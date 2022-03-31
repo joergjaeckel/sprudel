@@ -1,55 +1,19 @@
 import { Vector3 } from "three"
-import {
-    movingEntities,
-    livingEntities,
-    emittingEntities,
-    world,
-    particleEntities,
-    scalingEntities,
-    coloringEntities, validateParticle, fadingEntities
-} from "./index"
+import { validateParticle } from "./index"
+import type { Particle, IGeneric } from "./index"
+import {World} from "miniplex";
 
-export const movingSystem = (delta: number) => {
+export const livingSystem = (entities: Particle[], world: World, delta: number) => {
 
-    for (let i = 0; i < movingEntities.entities.length; i++) {
+    for (let i = 0; i < entities.length; i++) {
 
-        const entity = movingEntities.entities[i];
-
-        if (entity.startDelay > 0) {
-            entity.startDelay -= delta;
-            continue;
-        }
-
-        if (entity.speedModifier) {
-            entity.speed *= entity.speedModifier
-        } else {
-            entity.speed = entity.startSpeed
-        }
-
-        entity.velocity.setLength(entity.speed);
-
-        entity.position.add(entity.velocity);
-
-        entity.position.y -= entity.mass * delta;
-
-    }
-
-};
-
-export const livingSystem = (delta: number) => {
-
-    for (let i = 0; i < livingEntities.entities.length; i++) {
-
-        const entity = livingEntities.entities[i];
+        const entity = entities[i];
 
         entity.remainingLifetime -= delta
 
         entity.operationalLifetime = entity.startLifetime - entity.remainingLifetime
 
-        if (entity.startLifetime !== -1 && entity.remainingLifetime <= 0) {
-            world.queue.destroyEntity(entity)
-            continue
-        }
+        if (entity.startLifetime !== -1 && entity.remainingLifetime <= 0) world.queue.destroyEntity(entity)
 
     }
 
@@ -57,11 +21,12 @@ export const livingSystem = (delta: number) => {
 
 }
 
-export const emittingSystem = (delta: number) => {
+/* Typehint these are particles where emitting is set */
+export const emittingSystem = (entities: (Particle & {emitting: Particle[]})[], world: World, delta: number) => {
 
-    for (let i = 0; i < emittingEntities.entities.length; i++) {
+    for (let i = 0; i < entities.length; i++) {
 
-        const entity = emittingEntities.entities[i];
+        const entity = entities[i];
 
         for (let j = 0; j < entity.emitting.length; j++) {
 
@@ -98,9 +63,9 @@ export const emittingSystem = (delta: number) => {
 
                 world.queue.createEntity(validateParticle({
                     ...emitter,
-                    ...(emitter.opacityOverLifetime && { opacity: { interpolant: emitter.opacityOverLifetime.createInterpolant() } }),
-                    ...(emitter.colorOverLifetime && { color: { interpolant: emitter.colorOverLifetime.createInterpolant() } }),
-                    ...(emitter.sizeOverLifetime && { size: { interpolant: emitter.sizeOverLifetime.createInterpolant() } }),
+                    ...(emitter.opacityOverLifetime && { opacity: { value: [1], interpolant: emitter.opacityOverLifetime.createInterpolant() } }),
+                    ...(emitter.colorOverLifetime && { color: { value: [1, 1, 1], interpolant: emitter.colorOverLifetime.createInterpolant() } }),
+                    ...(emitter.sizeOverLifetime && { size: { value: [1], interpolant: emitter.sizeOverLifetime.createInterpolant() } }),
                     position: new Vector3()
                         .copy(entity.position)
                         .addScaledVector(new Vector3().random(), emitter.randomizePosition),
@@ -124,37 +89,42 @@ export const emittingSystem = (delta: number) => {
 
 };
 
-export const coloringSystem = (delta: number) => {
+export const movingSystem = (entities: Particle[], delta: number) => {
 
-    for (let i = 0; i < coloringEntities.entities.length; i++) {
+    for (let i = 0; i < entities.length; i++) {
 
-        const entity = coloringEntities.entities[i];
+        const entity = entities[i];
 
-        if (entity.color.interpolant) entity.color.value = entity.color.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
+        if (entity.startDelay > 0) {
+            entity.startDelay -= delta;
+            continue;
+        }
+
+        if (entity.speedModifier) {
+            entity.speed *= entity.speedModifier
+        } else {
+            entity.speed = entity.startSpeed
+        }
+
+        entity.velocity.setLength(entity.speed);
+
+        entity.position.add(entity.velocity);
+
+        entity.position.y -= entity.mass * delta;
 
     }
 
 };
 
-export const fadingSystem = (delta: number) => {
+export const keyframeSystem = (entities: Particle[], key: keyof Particle, delta: number) => {
 
-    for (let i = 0; i < fadingEntities.entities.length; i++) {
+    for (let i = 0; i < entities.length; i++) {
 
-        const entity = fadingEntities.entities[i];
+        const entity = entities[i];
 
-        if (entity.opacity.interpolant) entity.opacity.value = entity.opacity.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
+        const component = entity[key] as IGeneric
 
-    }
-
-};
-
-export const scalingSystem = (delta: number) => {
-
-    for (let i = 0; i < scalingEntities.entities.length; i++) {
-
-        const entity = scalingEntities.entities[i];
-
-        if (entity.size.interpolant) entity.size.value = entity.size.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
+        if (component.interpolant) component.value = component.interpolant.evaluate(entity.operationalLifetime / entity.startLifetime)
 
     }
 

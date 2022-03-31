@@ -1,15 +1,11 @@
 import {Canvas, extend, useFrame} from "@react-three/fiber";
-import {useEffect, useRef} from "react";
+import {useEffect, useMemo, useRef} from "react";
 import {OrbitControls} from "@react-three/drei";
 import {
-    emittingSystem,
-    livingSystem,
-    movingSystem,
-    scalingSystem,
-    world,
     validateParticle,
     ParticleGeometry,
-    ParticleMaterial
+    ParticleMaterial,
+    ParticleSystem,
 } from "sprudel";
 import GridPlate from "../GridPlate";
 
@@ -19,16 +15,15 @@ const Particles = () => {
 
     const ref = useRef()
 
+    const particleSystem = useMemo(() => new ParticleSystem(), [])
+
     useFrame((state, delta) => {
-        emittingSystem(delta)
-        movingSystem(delta)
-        livingSystem(delta)
-        scalingSystem(delta)
+        particleSystem.update(delta)
         ref.current.update()
     });
 
     useEffect(() => {
-        const main = world.createEntity(validateParticle({
+        const main = particleSystem.addParticle({
             size: 3,
             emitting: [
                 {
@@ -38,15 +33,15 @@ const Particles = () => {
                     startRotation: [1, 1, 0],
                 },
             ]
-        }));
+        })
 
-        return () => world.destroyEntity(main);
+        return () => particleSystem.destroyParticle(main)
 
     }, []);
 
     return (
         <points>
-            <particleGeometry ref={ref} />
+            <particleGeometry ref={ref} args={[particleSystem]}/>
             <particleMaterial />
         </points>
     )

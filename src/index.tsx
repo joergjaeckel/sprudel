@@ -1,18 +1,7 @@
-import {IEntity, World} from 'miniplex'
+import {Archetype, IEntity, World} from 'miniplex'
 import {ColorKeyframeTrack, Interpolant, KeyframeTrack, NumberKeyframeTrack, Vector3} from "three";
 
-export const world = new World()
-
-export const movingEntities = world.archetype("speed");
-export const livingEntities = world.archetype("startLifetime");
-export const scalingEntities = world.archetype('sizeOverLifetime');
-export const coloringEntities = world.archetype('colorOverLifetime');
-export const fadingEntities = world.archetype('opacityOverLifetime');
-
-export const particleEntities = world.archetype("particle");
-export const emittingEntities = world.archetype("emitting");
-export const ribbonEntities = world.archetype("ribbon");
-
+export * from './ParticleSystem'
 export * from './ParticleGeometry'
 export * from './ParticleMaterial'
 
@@ -25,6 +14,9 @@ export type Burst = {
     cycleCount: number
     repeatInterval: number
     time: number
+
+    /* Internal */
+    cycle: number
 }
 
 export const defaultBurst = {
@@ -37,26 +29,26 @@ export const defaultBurst = {
     cycle: 0,
 }
 
-interface IGeneric {
+export interface IGeneric {
     value: number[]
     interpolant?: Interpolant
     keyframes?: KeyframeTrack
     customFn?: (delta: number) => void
 }
 
-export type Particle = {
+export type Particle = IEntity & {
 
     particle?: boolean
     hideParticle?: boolean
 
     color?: IGeneric
-    colorOverLifetime?: ColorKeyframeTrack | ((delta: number) => void)
+    colorOverLifetime?: ColorKeyframeTrack & { createInterpolant: () => Interpolant}
 
     size?: IGeneric
-    sizeOverLifetime?: NumberKeyframeTrack | ((delta: number) => void)
+    sizeOverLifetime?: NumberKeyframeTrack & { createInterpolant: () => Interpolant}
 
     opacity?: IGeneric
-    opacityOverLifetime?: NumberKeyframeTrack | ((delta: number) => void)
+    opacityOverLifetime?: NumberKeyframeTrack & { createInterpolant: () => Interpolant}
 
     //duration: 2,
     //looping: false,
@@ -86,10 +78,22 @@ export type Particle = {
 
     inheritVelocity: boolean
 
+    speed: number
+    speedModifier: number
+
     emitting?: Particle[]
     bursts?: Burst[]
 
     remainingLifetime: number,
+
+    /* Emitting specific */
+    accumulate: number
+
+    /* Internals */
+    operationalLifetime: number
+    position: Vector3
+    velocity: Vector3
+    parent: number | undefined
 }
 
 export const defaultParticle = {
