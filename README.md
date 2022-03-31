@@ -214,6 +214,9 @@ Go to `/examples` install the packages and run `npm run dev` to show them in you
 
 ## Changelog
 
+### v0.0.5 31-3-22
+* Hotfix: Instant emit burst without waiting one interval
+
 ### v0.0.4 31-3-22
 * Clean build and publish 
 
