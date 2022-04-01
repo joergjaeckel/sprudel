@@ -16,7 +16,7 @@
     "resolveJsonModule": true,
     "noImplicitThis": false,
     "baseUrl": "./src",
-    "incremental": true,
+    "incremental": true
   },
   "include": ["./src"],
   "exclude": ["./node_modules/**/*"]

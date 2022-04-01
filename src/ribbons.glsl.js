@@ -80,7 +80,7 @@ export const vertex = /* glsl */ `
     #include <fog_vertex>
 
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-  }`;
+  }`
 
 export const fragment = /* glsl */ `
   uniform vec3 diffuse;
@@ -126,4 +126,4 @@ export const fragment = /* glsl */ `
       gl_FragColor.a *= step(vCounters, visibility);
   
   THREE.ShaderChunk.fog_fragment,
-}`;
+}`

@@ -11,10 +11,7 @@ const getBabelOptions = ({ useESModules }, targets) => ({
   extensions,
   include: ['src/**/*', '**/node_modules/**'],
   plugins: [['@babel/transform-runtime', { regenerator: false, useESModules }]],
-  presets: [
-    ['@babel/preset-env', { loose: true, modules: false, targets }],
-    '@babel/preset-typescript',
-  ],
+  presets: [['@babel/preset-env', { loose: true, modules: false, targets }], '@babel/preset-typescript'],
 })
 
 export default [
