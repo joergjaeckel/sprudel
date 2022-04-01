@@ -2,7 +2,7 @@
 
 # sprudel
 
-This is meant to be a nice and flexible Particle System for three.js. In its core it utilizes ```miniplex``` as ECS. 
+This is meant to be a nice and flexible Particle System for three.js. In its core it utilizes `miniplex` as ECS.
 
 ## Core Concepts
 
@@ -13,7 +13,9 @@ Systems iterate over sets of particles every frame and advance their values acco
 A BufferGeometry reads the values and puts them into its attributes. Vertex and fragment shader uses them to appropriate display each particle.
 
 ## Usage
+
 ### @react-three/fiber
+
 At the moment sprudel is tested in a react-three-fiber environment to avoid boilerplate.
 It's designed to be used in both worlds. Below the r3f examples there's a short hint on plain three.js usage.
 
@@ -28,10 +30,12 @@ import {
 
 extend({ParticleGeometry, ParticleMaterial})
 ```
+
 In your Component wrap them in a points object.
+
 ```JavaScript
 const Particles = () => {
-    
+
     return (
         <points>
             <particleGeometry />
@@ -46,7 +50,7 @@ You need to create the ParticleSystem and update both, the geometry and the syst
 
 ```JavaScript
 const Particles = () => {
-    
+
     const ref = useRef()
 
     const particleSystem = useMemo(() => new ParticleSystem(), [])
@@ -55,7 +59,7 @@ const Particles = () => {
         particleSystem.update(delta)
         ref.current.update()
     });
-    
+
     return (
         <points>
             <particleGeometry args={[particleSystem]} ref={ref} />
@@ -112,7 +116,7 @@ Your Particle System is defined by a data structure.
 ### Emitting
 
 Each particle you create or emit can be an emitter too. Emitting can be done by a rate over time, defining how many particles shall be emitted in a second.
-Props in an emitting object describe the particles that will be emitted. 
+Props in an emitting object describe the particles that will be emitted.
 
 ```JavaScript
 {
@@ -132,7 +136,8 @@ Props in an emitting object describe the particles that will be emitted.
     ]
 }
 ```
-Or you create bursts which emit an amount of particles at the same time. By setting rateOverTime to zero, particles are only emitted by the burst. 
+
+Or you create bursts which emit an amount of particles at the same time. By setting rateOverTime to zero, particles are only emitted by the burst.
 
 You can have multiple emitters and bursts on the same particle.
 
@@ -185,18 +190,18 @@ const particle = {
 There are several props influencing particle and emitting behaviour.
 
 | Prop                | Description                             |
-|---------------------|-----------------------------------------|
+| ------------------- | --------------------------------------- |
 | `startDelay`        | time to wait until animation starts     |
-| `startLifetime`     | initial lifetime (maximum age)          |     
-| `startSpeed`        | initial speed                           |     
-| `startPosition`     | initial position                        |     
-| `startRotation`     | initial rotation                        |     
-| `randomizeLifetime` | randomize initial lifetime              |     
-| `randomizeSpeed`    | randomize initial speed                 |     
-| `randomizePosition` | randomize initial position              |     
-| `randomizeRotation` | randomize initial rotation              |     
-| `speedModifier`     | factor to change speed every frame      |     
-| `mass`              | factor to change y-position every frame |     
+| `startLifetime`     | initial lifetime (maximum age)          |
+| `startSpeed`        | initial speed                           |
+| `startPosition`     | initial position                        |
+| `startRotation`     | initial rotation                        |
+| `randomizeLifetime` | randomize initial lifetime              |
+| `randomizeSpeed`    | randomize initial speed                 |
+| `randomizePosition` | randomize initial position              |
+| `randomizeRotation` | randomize initial rotation              |
+| `speedModifier`     | factor to change speed every frame      |
+| `mass`              | factor to change y-position every frame |
 
 ## Performance
 
@@ -215,27 +220,33 @@ Go to `/examples` install the packages and run `npm run dev` to show them in you
 ## Changelog
 
 ### v0.0.5 31-3-22
-* Hotfix: Instant emit burst without waiting one interval
+
+- Hotfix: Instant emit burst without waiting one interval
 
 ### v0.0.4 31-3-22
-* Clean build and publish 
+
+- Clean build and publish
 
 ### v0.0.3 31-3-22
-* Refactored RibbonRenderer to plain three.js 
-* Removed all react dependencies from src 
+
+- Refactored RibbonRenderer to plain three.js
+- Removed all react dependencies from src
 
 ### v0.0.2 31-3-22
-* Separated systems into concerns. Color, size and opacity are handled individually now.
-* Allow multiple instances by creating a new world along with a new ParticleSystem
-* Entity creation moved inside ParticleSystem and aliased with addParticle and destroyParticle
-* Changed blending to Blend Add
-* Renamed randomizeDirection to randomizeRotation
-* Added a lot of documentation
-* Polished examples
+
+- Separated systems into concerns. Color, size and opacity are handled individually now.
+- Allow multiple instances by creating a new world along with a new ParticleSystem
+- Entity creation moved inside ParticleSystem and aliased with addParticle and destroyParticle
+- Changed blending to Blend Add
+- Renamed randomizeDirection to randomizeRotation
+- Added a lot of documentation
+- Polished examples
 
 ### v0.0.1 28-3-22
-* Refactored particle rendering to plain three.js geometry and material
-* Added a lot of documentation
+
+- Refactored particle rendering to plain three.js geometry and material
+- Added a lot of documentation
 
 ### v0.0.0 24-3-22
-* Initial setup 
+
+- Initial setup

@@ -7,5 +7,5 @@ export default defineConfig({
   // https://github.com/vitejs/vite/issues/6215
   optimizeDeps: {
     include: ['react/jsx-runtime'],
-  }
+  },
 })

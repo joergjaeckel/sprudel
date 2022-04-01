@@ -28,7 +28,7 @@ void main() {
 	#include <worldpos_vertex>
 	#include <fog_vertex>
 }
-`;
+`
 
 export const fragment = /* glsl */ `
 uniform vec3 diffuse;
@@ -104,4 +104,4 @@ void main() {
     gl_FragColor.w *= 0.0;
     
 }
-`;
+`

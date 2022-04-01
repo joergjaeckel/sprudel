@@ -1,91 +1,92 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 canvas {
-    touch-action: none;
+  touch-action: none;
 }
 
 html,
 body,
 #root {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden;
 }
 
 #root {
-    overflow: auto;
+  overflow: auto;
 }
 
 body {
-    position: fixed;
-    overflow: hidden;
-    overscroll-behavior-y: none;
-    font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto, segoe ui, arial, sans-serif;
-    color: black;
-    background: #131228;
+  position: fixed;
+  overflow: hidden;
+  overscroll-behavior-y: none;
+  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu,
+    roboto, noto, segoe ui, arial, sans-serif;
+  color: black;
+  background: #131228;
 }
 
 .page {
-    position: relative;
-    width: 100%;
-    height: 100vh;
+  position: relative;
+  width: 100%;
+  height: 100vh;
 }
 
 .page > h1 {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 900;
-    font-size: 8em;
-    margin: 0;
-    color: white;
-    line-height: 0.59em;
-    letter-spacing: -2px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  font-size: 8em;
+  margin: 0;
+  color: white;
+  line-height: 0.59em;
+  letter-spacing: -2px;
 }
 
 @media only screen and (max-width: 1000px) {
-    .page > h1 {
-        font-size: 5em;
-        letter-spacing: -1px;
-    }
+  .page > h1 {
+    font-size: 5em;
+    letter-spacing: -1px;
+  }
 }
 
 .page > a {
-    margin: 0;
-    color: white;
-    text-decoration: none;
+  margin: 0;
+  color: white;
+  text-decoration: none;
 }
 
 .demo-panel {
-    position: absolute;
-    bottom: 50px;
-    left: 50px;
-    max-width: 300px;
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  max-width: 300px;
 }
 
 .spot {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    margin: 8px;
-    background: #49148A;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin: 8px;
+  background: #49148a;
 }
 
 .spot.selected {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin: 5px;
-    border: 3px solid #B12C52;
-    background: #FBFF4E;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: 5px;
+  border: 3px solid #b12c52;
+  background: #fbff4e;
 }
