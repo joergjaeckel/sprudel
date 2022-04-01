@@ -20,6 +20,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
+    "dev": "rollup -c --watch",
     "eslint": "eslint .",
     "eslint-fix": "eslint --fix .",
     "prebuild": "tsc",
