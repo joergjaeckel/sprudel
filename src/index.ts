@@ -35,6 +35,8 @@ export interface IGeneric {
 }
 
 export type Particle = {
+  id: number
+
   particle?: boolean
   hideParticle?: boolean
 
@@ -142,8 +144,12 @@ export const validateBurst = (burst: Burst): Burst => {
 
 const evalKeys = ['size', 'color', 'opacity']
 
+let nextParticleId = 1
+
 export const validateParticle = (entity: Particle): Particle => {
   const e = Object.assign({}, defaultParticle, entity) as Particle
+
+  e.id = nextParticleId++
 
   evalKeys.map((key) => {
     const component = entity[`${key}OverLifetime` as keyof Particle]

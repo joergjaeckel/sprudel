@@ -1,7 +1,7 @@
 import { Vector3 } from 'three'
 import { validateParticle } from './index'
 import type { Particle, IGeneric } from './index'
-import { World, RegisteredEntity } from 'miniplex'
+import { World } from 'miniplex'
 
 export const livingSystem = (entities: Particle[], world: World, delta: number) => {
   for (let i = 0; i < entities.length; i++) {
@@ -81,7 +81,7 @@ export const emittingSystem = (
             startLifetime,
             startSpeed,
             speed: startSpeed,
-            parent: (entity as RegisteredEntity<Particle>).__miniplex.id,
+            parent: entity.id,
           }),
         )
       }
