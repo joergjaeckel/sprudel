@@ -1,4 +1,3 @@
-import { IEntity } from 'miniplex'
 import { ColorKeyframeTrack, Interpolant, KeyframeTrack, NumberKeyframeTrack, Vector3 } from 'three'
 
 export * from './ParticleGeometry'
@@ -35,7 +34,7 @@ export interface IGeneric {
   customFn?: (delta: number) => void
 }
 
-export type Particle = IEntity & {
+export type Particle = {
   particle?: boolean
   hideParticle?: boolean
 
