@@ -1,13 +1,11 @@
-import { Archetype, IEntity, World } from 'miniplex'
+import { IEntity } from 'miniplex'
 import { ColorKeyframeTrack, Interpolant, KeyframeTrack, NumberKeyframeTrack, Vector3 } from 'three'
 
-export * from './ParticleSystem'
 export * from './ParticleGeometry'
 export * from './ParticleMaterial'
-
+export * from './ParticleSystem'
 export * from './RibbonGeometry'
 export * from './RibbonMaterial'
-
 export * from './systems'
 
 export type Burst = {
