@@ -215,7 +215,7 @@ There's the plan to built in an object pool or ring buffer to reuse entities ins
 
 ## Examples
 
-Go to `/examples` install the packages and run `npm run dev` to show them in your browser.
+Build the package `npm run build`. Go to `/examples`, install the packages and run `npm run dev` to show them in your browser.
 
 ## Changelog
 
