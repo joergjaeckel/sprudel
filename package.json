@@ -20,6 +20,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
+    "dev": "rollup -c --watch",
     "eslint": "eslint .",
     "eslint-fix": "eslint --fix .",
     "prebuild": "tsc",
@@ -57,6 +58,6 @@
     "*.{js,jsx,ts,tsx,md}": "prettier --write"
   },
   "dependencies": {
-    "miniplex": "^0.7.2"
+    "miniplex": "^0.9.0"
   }
 }

@@ -1,13 +1,10 @@
-import { Archetype, IEntity, World } from 'miniplex'
 import { ColorKeyframeTrack, Interpolant, KeyframeTrack, NumberKeyframeTrack, Vector3 } from 'three'
 
-export * from './ParticleSystem'
 export * from './ParticleGeometry'
 export * from './ParticleMaterial'
-
+export * from './ParticleSystem'
 export * from './RibbonGeometry'
 export * from './RibbonMaterial'
-
 export * from './systems'
 
 export type Burst = {
@@ -37,7 +34,9 @@ export interface IGeneric {
   customFn?: (delta: number) => void
 }
 
-export type Particle = IEntity & {
+export type Particle = {
+  id: number
+
   particle?: boolean
   hideParticle?: boolean
 
@@ -145,8 +144,12 @@ export const validateBurst = (burst: Burst): Burst => {
 
 const evalKeys = ['size', 'color', 'opacity']
 
+let nextParticleId = 1
+
 export const validateParticle = (entity: Particle): Particle => {
   const e = Object.assign({}, defaultParticle, entity) as Particle
+
+  e.id = nextParticleId++
 
   evalKeys.map((key) => {
     const component = entity[`${key}OverLifetime` as keyof Particle]
