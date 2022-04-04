@@ -1,4 +1,4 @@
-import { Canvas, extend, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, extend, useLoader } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import { OrbitControls } from '@react-three/drei'
 import { ParticleSystem, ParticleGeometry, ParticleMaterial, RibbonGeometry, RibbonMaterial } from 'sprudel'
@@ -10,18 +10,12 @@ import GridPlate from '../GridPlate'
 extend({ ParticleGeometry, ParticleMaterial, RibbonGeometry, RibbonMaterial })
 
 const Particles = () => {
-  const particleRef = useRef()
-  const ribbonRef = useRef()
+  const particleRef = useRef<ParticleGeometry>()
+  const ribbonRef = useRef<RibbonGeometry>()
 
   const [alphaMap, trailMap] = useLoader(TextureLoader, [spriteSheet, trailSheet])
 
   const particleSystem = useMemo(() => new ParticleSystem(), [])
-
-  useFrame((state, delta) => {
-    particleSystem.update(delta)
-    particleRef.current.update()
-    ribbonRef.current.update()
-  })
 
   useEffect(() => {
     const start = particleSystem.addParticle({
@@ -43,6 +37,10 @@ const Particles = () => {
       linewidth: 1,
       color: [0, 0, 1],
     })
+
+    particleSystem.update(0)
+    particleRef.current?.update()
+    ribbonRef.current?.update()
 
     return () => {
       particleSystem.destroyParticle(start)

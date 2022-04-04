@@ -1,15 +1,15 @@
 import { Canvas, extend, useFrame, useLoader } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import { OrbitControls } from '@react-three/drei'
-import { validateParticle, ParticleGeometry, ParticleMaterial, ParticleSystem } from 'sprudel'
-import spriteSheet from './assets/images/spritesheet.png'
+import { ParticleGeometry, ParticleMaterial, ParticleSystem } from 'sprudel'
 import { ColorKeyframeTrack, NumberKeyframeTrack, TextureLoader } from 'three'
+import spriteSheet from './assets/images/spritesheet.png'
 import GridPlate from '../GridPlate'
 
 extend({ ParticleGeometry, ParticleMaterial })
 
 const Particles = () => {
-  const ref = useRef()
+  const ref = useRef<ParticleGeometry>()
 
   const alphaMap = useLoader(TextureLoader, spriteSheet)
 
@@ -17,7 +17,7 @@ const Particles = () => {
 
   useFrame((state, delta) => {
     particleSystem.update(delta)
-    ref.current.update()
+    ref.current?.update()
   })
 
   useEffect(() => {

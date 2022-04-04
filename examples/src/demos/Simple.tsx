@@ -1,35 +1,22 @@
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, extend, useFrame } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
 import { OrbitControls } from '@react-three/drei'
-import { validateParticle, ParticleGeometry, ParticleMaterial, ParticleSystem } from 'sprudel'
-import { Points } from 'three'
+import { ParticleGeometry, ParticleMaterial, ParticleSystem } from 'sprudel'
 import GridPlate from '../GridPlate'
 
 extend({ ParticleGeometry, ParticleMaterial })
 
 const Particles = () => {
-  const ref = useRef()
-
-  const { scene } = useThree()
+  const ref = useRef<ParticleGeometry>()
 
   const particleSystem = useMemo(() => new ParticleSystem(), [])
 
   useFrame((state, delta) => {
     particleSystem.update(delta)
-    ref.current.update()
+    ref.current?.update()
   })
 
   useEffect(() => {
-    const geo = new ParticleGeometry(particleSystem)
-
-    ref.current = geo
-
-    const mat = new ParticleMaterial()
-
-    const points = new Points(geo, mat)
-
-    scene.add(points)
-
     const main = particleSystem.addParticle({
       size: 3,
       emitting: [
@@ -37,7 +24,6 @@ const Particles = () => {
           rateOverTime: 10,
           startLifetime: 2,
           startSpeed: 0.3,
-          size: 3,
           startRotation: [1, 1, 0],
         },
       ],
@@ -46,7 +32,12 @@ const Particles = () => {
     return () => particleSystem.destroyParticle(main)
   }, [])
 
-  return null
+  return (
+    <points>
+      <particleGeometry ref={ref} args={[particleSystem]} />
+      <particleMaterial />
+    </points>
+  )
 }
 
 const Simple = () => {

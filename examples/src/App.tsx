@@ -3,6 +3,17 @@ import { HashRouter as Router, Link, Route, Routes, useMatch } from 'react-route
 import logo from './logo.png'
 import * as demos from './demos'
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      particleGeometry: any
+      particleMaterial: any
+      ribbonGeometry: any
+      ribbonMaterial: any
+    }
+  }
+}
+
 const defaultName = 'Simple'
 
 const visibleComponents = Object.entries(demos).reduce(
@@ -10,12 +21,14 @@ const visibleComponents = Object.entries(demos).reduce(
   {},
 )
 
+// @ts-ignore
 const DefaultComponent = visibleComponents[defaultName].Component
 
 const RoutedComponent = () => {
   const {
     params: { name },
   } = useMatch('/demo/:name') || { params: { name: defaultName } }
+  // @ts-ignore
   const Component = visibleComponents[name || defaultName].Component
   return <Component />
 }

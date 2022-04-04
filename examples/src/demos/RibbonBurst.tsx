@@ -10,8 +10,8 @@ import GridPlate from '../GridPlate'
 extend({ ParticleGeometry, ParticleMaterial, RibbonGeometry, RibbonMaterial })
 
 const Particles = () => {
-  const particleRef = useRef()
-  const ribbonRef = useRef()
+  const particleRef = useRef<ParticleGeometry>()
+  const ribbonRef = useRef<RibbonGeometry>()
 
   const [alphaMap, trailMap] = useLoader(TextureLoader, [spriteSheet, trailSheet])
 
@@ -19,8 +19,8 @@ const Particles = () => {
 
   useFrame((state, delta) => {
     particleSystem.update(delta)
-    particleRef.current.update()
-    ribbonRef.current.update()
+    particleRef.current?.update()
+    ribbonRef.current?.update()
   })
 
   useEffect(() => {
