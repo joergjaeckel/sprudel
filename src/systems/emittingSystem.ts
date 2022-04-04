@@ -1,9 +1,9 @@
-import { Particle, validateParticle } from '../index'
+import { Particle, RuntimeParticle, validateParticle } from '../index'
 import { World } from 'miniplex'
-import { Vector3 } from 'three'
+import { Interpolant, InterpolateLinear, KeyframeTrack, Vector3 } from 'three'
 
 export const emittingSystem = (
-  entities: (Particle & { emitting: Particle[] })[],
+  entities: (Particle & RuntimeParticle & { emitting: Particle & RuntimeParticle[] })[],
   world: World,
   delta: number,
 ) => {
@@ -48,13 +48,28 @@ export const emittingSystem = (
           validateParticle({
             ...emitter,
             ...(emitter.opacityOverLifetime && {
-              opacity: { value: [1], interpolant: emitter.opacityOverLifetime.createInterpolant() },
+              opacity: {
+                value: [1],
+                interpolant: (
+                  emitter.opacityOverLifetime as KeyframeTrack & { createInterpolant: () => Interpolant }
+                ).createInterpolant(),
+              },
             }),
             ...(emitter.colorOverLifetime && {
-              color: { value: [1, 1, 1], interpolant: emitter.colorOverLifetime.createInterpolant() },
+              color: {
+                value: [1, 1, 1],
+                interpolant: (
+                  emitter.colorOverLifetime as KeyframeTrack & { createInterpolant: () => Interpolant }
+                ).createInterpolant(),
+              },
             }),
             ...(emitter.sizeOverLifetime && {
-              size: { value: [1], interpolant: emitter.sizeOverLifetime.createInterpolant() },
+              size: {
+                value: [1],
+                interpolant: (
+                  emitter.sizeOverLifetime as KeyframeTrack & { createInterpolant: () => Interpolant }
+                ).createInterpolant(),
+              },
             }),
             position: new Vector3()
               .copy(entity.position)

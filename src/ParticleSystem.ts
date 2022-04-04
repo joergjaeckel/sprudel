@@ -1,4 +1,4 @@
-import { Archetype, World } from 'miniplex'
+import { Archetype, RegisteredEntity, World } from 'miniplex'
 import * as systems from './systems'
 import { Particle, validateParticle } from './index'
 
@@ -39,10 +39,10 @@ export class ParticleSystem {
     systems.keyframeSystem(this.fadingEntities.entities, 'opacity', delta)
   }
 
-  addParticle = (object: Particle): Particle => {
+  addParticle = (object: Particle): RegisteredEntity<any> => {
     const entity = this.world.createEntity(validateParticle(object))
 
-    return entity as Particle
+    return entity
   }
 
   destroyParticle = (object: Particle) => {

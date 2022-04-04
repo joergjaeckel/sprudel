@@ -1,7 +1,7 @@
-import { Particle } from '../index'
+import { RuntimeParticle } from '../index'
 import { World } from 'miniplex'
 
-export const livingSystem = (entities: Particle[], world: World, delta: number) => {
+export const livingSystem = (entities: RuntimeParticle[], world: World, delta: number) => {
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
 

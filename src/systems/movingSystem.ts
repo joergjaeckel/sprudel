@@ -1,6 +1,6 @@
-import { Particle } from '../index'
+import { RuntimeParticle } from '../index'
 
-export const movingSystem = (entities: Particle[], delta: number) => {
+export const movingSystem = (entities: RuntimeParticle[], delta: number) => {
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
 
