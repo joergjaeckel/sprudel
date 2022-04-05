@@ -1,7 +1,8 @@
-import { RuntimeParticle } from '../index'
-import { World } from 'miniplex'
+import type { World } from 'miniplex'
 
-export const livingSystem = (entities: RuntimeParticle[], world: World, delta: number) => {
+export const livingSystem = (world: World, delta: number) => {
+  const { entities } = world.archetype('startLifetime')
+
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
 

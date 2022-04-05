@@ -1,6 +1,8 @@
-import { RuntimeParticle } from '../index'
+import type { World } from 'miniplex'
 
-export const movingSystem = (entities: RuntimeParticle[], delta: number) => {
+export const movingSystem = (world: World, delta: number) => {
+  const { entities } = world.archetype('speed')
+
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
 

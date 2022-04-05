@@ -20,7 +20,7 @@ const Particles = () => {
   })
 
   useEffect(() => {
-    const geo = new ParticleGeometry(particleSystem)
+    const geo = new ParticleGeometry(particleSystem.world)
 
     ref.current = geo
 

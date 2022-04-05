@@ -1,12 +1,10 @@
-import { Particle, RuntimeParticle, validateParticle } from '../index'
-import { World } from 'miniplex'
-import { Interpolant, InterpolateLinear, KeyframeTrack, Vector3 } from 'three'
+import type { World } from 'miniplex'
+import { Interpolant, KeyframeTrack, Vector3 } from 'three'
+import { validateParticle } from '../validateParticle'
 
-export const emittingSystem = (
-  entities: (Particle & RuntimeParticle & { emitting: Particle & RuntimeParticle[] })[],
-  world: World,
-  delta: number,
-) => {
+export const emittingSystem = (world: World, delta: number) => {
+  const { entities } = world.archetype('emitting')
+
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
 

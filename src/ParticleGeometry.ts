@@ -1,19 +1,23 @@
 import { BufferAttribute, BufferGeometry } from 'three'
-import { Archetype } from 'miniplex'
+import type { Archetype, World } from 'miniplex'
 
 export class ParticleGeometry extends BufferGeometry {
   isParticleGeometry: boolean
 
-  system: { particleEntities: Archetype<any> }
+  world: World
 
-  constructor(system: { particleEntities: Archetype<any> }, maxCount = 10000) {
+  archetype: Archetype<any>
+
+  constructor(world: World, maxCount = 10000) {
     super()
 
     this.isParticleGeometry = true
 
     this.type = 'isParticleGeometry'
 
-    this.system = system
+    this.world = world
+
+    this.archetype = world.archetype('particle')
 
     this.setAttribute('position', new BufferAttribute(new Float32Array(maxCount * 3), 3))
     this.setAttribute('color', new BufferAttribute(new Float32Array(maxCount * 3), 3))
@@ -25,14 +29,14 @@ export class ParticleGeometry extends BufferGeometry {
   }
 
   update() {
-    for (let i = 0; i < this.system.particleEntities.entities.length; i++) {
+    for (let i = 0; i < this.archetype.entities.length; i++) {
       const {
         position = { x: 0, y: 0, z: 0 },
         opacity = { value: [1] },
         size = { value: [1] },
         color = { value: [1, 1, 1] },
         sprite = 0,
-      } = this.system.particleEntities.entities[i]
+      } = this.archetype.entities[i]
 
       this.attributes.position.setXYZ(i, position.x, position.y, position.z)
       this.attributes.color.setXYZ(i, color.value[0], color.value[1], color.value[2])
@@ -41,7 +45,7 @@ export class ParticleGeometry extends BufferGeometry {
       this.attributes.sprite.setX(i, sprite)
     }
 
-    this.setDrawRange(0, this.system.particleEntities.entities.length)
+    this.setDrawRange(0, this.archetype.entities.length)
 
     this.attributes.position.needsUpdate = true
     this.attributes.color.needsUpdate = true

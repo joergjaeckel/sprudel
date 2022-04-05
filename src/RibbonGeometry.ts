@@ -1,9 +1,11 @@
 import { BufferAttribute, BufferGeometry } from 'three'
 import type { Archetype } from 'miniplex'
+import { World } from 'miniplex'
 
 export class RibbonGeometry extends BufferGeometry {
   isRibbonGeometry: boolean
-  system: { ribbonEntities: Archetype<any> }
+  world: World
+  archetype: Archetype<any>
 
   positions: Float32Array
   previous: Float32Array
@@ -17,14 +19,16 @@ export class RibbonGeometry extends BufferGeometry {
   _positions: number[]
   _counters: number[]
 
-  constructor(system: { ribbonEntities: Archetype<any> }, maxCount = 10000) {
+  constructor(world: World, maxCount = 10000) {
     super()
 
     this.isRibbonGeometry = true
 
     this.type = 'isRibbonGeometry'
 
-    this.system = system
+    this.world = world
+
+    this.archetype = world.archetype('ribbon')
 
     this.setAttribute('position', new BufferAttribute(new Float32Array(maxCount * 3), 3))
     this.setAttribute('previous', new BufferAttribute(new Float32Array(maxCount * 3), 3))
@@ -77,10 +81,10 @@ export class RibbonGeometry extends BufferGeometry {
 
     let _sorted = []
 
-    for (let i = 0; i < this.system.ribbonEntities.entities.length; i++) {
-      const e = this.system.ribbonEntities.entities[i]
+    for (let i = 0; i < this.archetype.entities.length; i++) {
+      const e = this.archetype.entities[i]
       const array = _sorted[e.parent]
-      array ? array.push(this.system.ribbonEntities.entities[i]) : (_sorted[e.parent] = [e])
+      array ? array.push(this.archetype.entities[i]) : (_sorted[e.parent] = [e])
     }
 
     //normalize indices

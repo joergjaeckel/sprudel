@@ -47,7 +47,7 @@ const Particles = ({
 
   return (
     <points>
-      <particleGeometry args={[particleSystem]} ref={ref} />
+      <particleGeometry args={[particleSystem.world]} ref={ref} />
       <particleMaterial />
     </points>
   )

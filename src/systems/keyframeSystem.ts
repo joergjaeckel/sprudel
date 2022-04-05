@@ -1,6 +1,9 @@
-import { IGeneric, RuntimeParticle } from '../index'
+import type { World } from 'miniplex'
+import { IGeneric, RuntimeParticle } from '../validateParticle'
 
-export const keyframeSystem = (entities: RuntimeParticle[], key: keyof RuntimeParticle, delta: number) => {
+export const keyframeSystem = (world: World, key: keyof RuntimeParticle, delta: number) => {
+  const { entities } = world.archetype(`${key}OverLifetime`)
+
   for (let i = 0; i < entities.length; i++) {
     const entity = entities[i]
 

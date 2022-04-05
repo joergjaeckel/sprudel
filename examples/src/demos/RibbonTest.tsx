@@ -51,7 +51,7 @@ const Particles = () => {
   return (
     <>
       <points>
-        <particleGeometry ref={particleRef} args={[particleSystem]} />
+        <particleGeometry ref={particleRef} args={[particleSystem.world]} />
         <particleMaterial
           alphaMap={alphaMap}
           spriteSize={{ x: 128, y: 128 }}
@@ -59,7 +59,7 @@ const Particles = () => {
         />
       </points>
       <mesh>
-        <ribbonGeometry ref={ribbonRef} args={[particleSystem]} />
+        <ribbonGeometry ref={ribbonRef} args={[particleSystem.world]} />
         <ribbonMaterial alphaMap={trailMap} />
       </mesh>
     </>
