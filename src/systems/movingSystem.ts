@@ -1,4 +1,7 @@
 import type { World } from 'miniplex'
+import {Vector3} from "three";
+
+const gravityForce = new Vector3(0,-10,0)
 
 export const movingSystem = (world: World, delta: number) => {
   const { entities } = world.archetype('speed')
@@ -17,10 +20,11 @@ export const movingSystem = (world: World, delta: number) => {
       entity.speed = entity.startSpeed
     }
 
-    entity.velocity.setLength(entity.speed)
+    entity.velocity.setLength(entity.speed).add(gravityForce.setLength(delta))
+
+    //entity.velocity.y -= entity.mass * delta
 
     entity.position.add(entity.velocity)
 
-    entity.position.y -= entity.mass * delta
   }
 }

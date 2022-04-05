@@ -41,6 +41,7 @@ export type Particle = {
   randomizeLifetime?: number
 
   mass?: number
+  collide?: boolean
 
   linewidth?: number
   ribbon?: boolean
