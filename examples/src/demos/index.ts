@@ -7,5 +7,6 @@ const RibbonBurst = { Component: lazy(() => import('./RibbonBurst')) }
 const RibbonTest = { Component: lazy(() => import('./RibbonTest')) }
 const Three = { Component: lazy(() => import('./Three')) }
 const MultipleSystems = { Component: lazy(() => import('./MultipleSystems')) }
+const Collision = { Component: lazy(() => import('./Collision')) }
 
-export { Simple, Burst, Color, RibbonBurst, RibbonTest, Three, MultipleSystems }
+export { Simple, Burst, Color, RibbonBurst, RibbonTest, Three, MultipleSystems, Collision }
